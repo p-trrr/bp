@@ -13,19 +13,12 @@ AFRAME.registerComponent('playground', {
 
         this.attachNote = function(e) {
             let intersectedObject = e.detail.intersection.object;
-
-            let newNote = document.createElement('a-sphere');
-            newNote.setAttribute('color', 'red');
-            newNote.setAttribute('scale', '.1 .1 .1');
-            newNote.setAttribute('position',intersectedObject.el.object3D.position);
-            newNote.setAttribute('class', intersectedObject.el.getAttribute('class'));
-            //intersectedObject.appendChilden(newNote);
+            let note = new Note(intersectedObject.el.getAttribute('class'), stave.index, intersectedObject.el.object3D.position);
             
-            //console.log(intersectedObject);//.components.position.attrValue);
+            el.sceneEl.appendChild(note.HTMLelement);
+            stave.addNote(note);
             
-            stave.addNote(newNote);
-            el.sceneEl.appendChild(newNote);
-            console.log(stave.notes); 
+            console.log(stave.notes.tone); 
             //intersectedObject.sceneEl.appendChild(newNote);
         }              
         el.addEventListener('click', this.attachNote);

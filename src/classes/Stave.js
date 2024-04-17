@@ -1,6 +1,4 @@
-const Note = require('./Note.js')
-
-export class Stave{
+class Stave{
     constructor() {
         this.index = 0;
         this.maxIndex = 8;
@@ -53,3 +51,5 @@ export class Stave{
     }
     
 }
+
+module.exports = Stave;

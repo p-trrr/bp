@@ -1,4 +1,4 @@
-export class Note {
+class Note {
     constructor(tone, index, position) {
         //this.id = id;
         this.tone = tone; //class of the intersected object: intersectedObject.el.getAttribute('class');
@@ -28,3 +28,4 @@ export class Note {
         return this.column;
     }
 }
+module.exports = Note;
