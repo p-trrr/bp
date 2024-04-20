@@ -3,10 +3,14 @@ const path = require('path');
 
 module.exports = {
     mode: 'development',
-    entry: './src/index.js', // Entry point of your application
+    entry: {
+        bundle: path.resolve(__dirname, 'src/index.js'),
+    },
     output: {
         path: path.resolve(__dirname, 'dist'), // Output directory
-        filename: 'bundle.js' // Name of the bundled file
+        filename: '[name].js', // Name of the bundled file
+        clean: true,
+        assetModuleFilename: '[name][ext]',
     },
     devServer: {
         static: {
@@ -28,7 +32,7 @@ module.exports = {
         use: {
             loader: 'babel-loader',
             options: {
-            presets: ['@babel/preset-env']
+                presets: ['@babel/preset-env']
             }
         }
         }

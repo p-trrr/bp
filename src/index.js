@@ -1,7 +1,9 @@
 //require('aframe');
-require('./components/playground')
 require('aframe-environment-component')
-require('./components/stave-pointer')
-require('./components/text-loader')
-require('./components/stave-pointer')
-require('./components/mover')
+require('./classes/Note.js')
+require('./classes/Stave.js')
+
+require('./components/pointer.js')
+require('./components/playground.js')
+require('./components/text-loader.js')
+require('./components/mover.js')
