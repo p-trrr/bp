@@ -7,6 +7,7 @@ AFRAME.registerComponent('playground', {
         const stave = new Stave();
         const previousButton = document.querySelector('#prev-button');
         const nextButton = document.querySelector('#next-button');
+        const playButton = document.querySelector('#play-button');
         const emptyTheStaveButton = document.querySelector('#empty-stave-button');
 
         stave.generateStave();
@@ -59,5 +60,6 @@ AFRAME.registerComponent('playground', {
         }
         emptyTheStaveButton.addEventListener('click', this.emptyStave);        
     
+        playButton.addEventListener('click', () => stave.playTones());
     }
 });

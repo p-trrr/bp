@@ -7,6 +7,7 @@ class Stave{
         //this.columns = 8;       
         this.HTMLelement = document.querySelector('#stave');
         this.currentMaxId = 0;
+        
     }
 
     generateStave() {
@@ -60,7 +61,20 @@ class Stave{
     removeNotes() {
         this.notes=[];
     }
-    
+    playTones() {
+        if (this.notes.length > 0){
+            delay = 1000;
+
+            this.notes.forEach(note => {
+                setTimeout(() => {
+                    note.playTone();
+                    console.log("Playing " + note);
+                }, delay);
+                delay += 1000;
+                
+            });
+        } else {console.log("No notes to play");}
+    }
 }
 
 module.exports = Stave;

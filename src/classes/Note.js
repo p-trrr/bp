@@ -37,7 +37,7 @@ class Note {
         setTimeout(() => {
             oscillator.stop();
             audioCtx.close();
-        }, 500); // Play tone for 500 ms
+        }, 1000); // Play tone for 1000 ms
     }
     
     

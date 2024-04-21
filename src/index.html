@@ -38,7 +38,9 @@
                 <a-triangle position="0.1 0 0.01" rotation="0 0 -90" scale="0.12 0.1 1" color="black"></a-triangle>
             </a-circle>
 
-            <a-circle id="prev-button" position="-0.5 1 -2" radius="0.2" rotation="-15 0 0" color="#ECECEC">
+            <a-circle id="prev-button" position="-0.5 1 -2" radius="0.2" rotation="-15 0 0" color="#ECECEC"
+                      animation__mousedown="property: components.material.material.color; type: color; to: yellow; startEvents: mousedown; dur: 050"
+                      animation__mouseup="property: components.material.material.color; type: color; to: white; startEvents: mouseup; dur: 050">
                 <a-plane position="0 0 0.01" rotation="0 0 0" width="0.2" height="0.05" color="black"></a-plane>
                 <a-triangle position="-0.1 0 0.01" rotation="0 0 90" scale="0.12 0.1 1" color="black"></a-triangle>
             </a-circle>
