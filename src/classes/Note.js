@@ -5,11 +5,13 @@ class Note {
         this.index = index;
         this.frequency = frequency;
         this.HTMLelement = document.createElement('a-sphere');
-//
+
+        this.HTMLelement.setAttribute('id', this.id);
         this.HTMLelement.setAttribute('color', 'red');;
         this.HTMLelement.setAttribute('scale', '.1 .1 .1');
         this.HTMLelement.setAttribute('position', position);
         this.HTMLelement.setAttribute('frequency', frequency);
+        this.HTMLelement.setAttribute('visible', 'true');
         this.HTMLelement.classList.add(tone);
 
         //this.playTone(this.frequency);

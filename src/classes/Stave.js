@@ -37,6 +37,7 @@ class Stave{
                 plane.setAttribute('height', '0.2');
                 plane.setAttribute('rotation', '0 0 0');
                 plane.setAttribute('material', 'opacity: 0; transparent: true');
+                plane.setAttribute('visible', 'true');
 
                 plane.setAttribute('class', tones[i]);
                 plane.setAttribute('index', index[i]);
@@ -68,7 +69,7 @@ class Stave{
             this.notes.forEach(note => {
                 setTimeout(() => {
                     note.playTone();
-                    console.log("Playing " + note);
+                    console.log("Playing " + note.tone);
                 }, delay);
                 delay += 1000;
                 
