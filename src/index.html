@@ -16,12 +16,16 @@
             <a-entity id="environment" environment="preset: contact" lightPosition="0 4 2"></a-entity>
 
             <a-entity id="stave-lines">
-                <a-cylinder position="0 1 -4.1"  radius=".05" height="5" rotation="90 90 0" color="#FFC65D"></a-cylinder>
-                <a-cylinder position="0 1.4 -4.1"  radius=".05" height="5" rotation="90 90 0" color="#FFC65D"></a-cylinder>
-                <a-cylinder position="0 1.8 -4.1"  radius=".05" height="5" rotation="90 90 0" color="#FFC65D"></a-cylinder>
+                <a-cylinder position="0 1 -4.1"   radius=".05" height="5" rotation="90 90 0" color="#FFC65D"></a-cylinder>
+                <a-cylinder position="0 1.4 -4.1" radius=".05" height="5" rotation="90 90 0" color="#FFC65D"></a-cylinder>
+                <a-cylinder position="0 1.8 -4.1" radius=".05" height="5" rotation="90 90 0" color="#FFC65D"></a-cylinder>
                 <a-cylinder position="0 2.2 -4.1" radius=".05" height="5" rotation="90 90 0" color="#FFC65D"></a-cylinder>
                 <a-cylinder position="0 2.6 -4.1" radius=".05" height="5" rotation="90 90 0" color="#FFC65D"></a-cylinder>
             </a-entity>
+            <a-entity id="trefle-clef" position="2 1 -3">
+                <a-gltf-model src="./assets/scene.gltf"></a-gltf-model>
+            </a-entity>
+            
 
             <a-entity id="stave" playground data-raycastable note-attachment stave-pointer pointer></a-entity>
             
@@ -29,7 +33,9 @@
                 <a-text id="card-text" align="center" color="black" width="3" height=".8" wrap-pixels="1500"></a-text>
             </a-plane>
         
-            <a-circle id="play-button" position="0 1 -2" radius=".2" rotation="-15 0 0">
+            <a-circle id="play-button" position="0 1 -2" radius=".2" rotation="-15 0 0"
+                      animation__mousedown="property: components.material.material.color; type: color; to: yellow; startEvents: mousedown; dur: 050"
+                      animation__mouseup="property: components.material.material.color; type: color; to: white; startEvents: mouseup; dur: 050">
                 <a-triangle position=".03 0 .01" scale="0.2 0.2 1" rotation="0 0 -90" color="black"></a-triangle>
             </a-circle>
 

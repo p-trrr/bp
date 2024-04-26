@@ -1,28 +1,30 @@
 AFRAME.registerComponent('pointer', {
     init: function () {
       let el = this.el;
-      let note = this.note
-      note = null;
+      let scene = document.querySelector("a-scene");
+      let note = null;
     
       this.showNote = function(e){
+        let intersectedObject =  e.detail.intersection.object;
         if(!note){
             note = document.createElement('a-sphere');
+            note.setAttribute('id', 'pointer');
             note.setAttribute('material', 'opacity: 0.7; transparent: true; color: red;');
             note.setAttribute('scale', '.1 .1 .1');
-            note.setAttribute('class', e.detail.intersection.object.el.getAttribute('class'));
-            note.setAttribute('position', el.object3D.worldToLocal(e.detail.intersection.object.el.object3D.position));
+            note.setAttribute('class', intersectedObject.el.getAttribute('class'));
+            note.setAttribute('position', el.object3D.worldToLocal(intersectedObject.el.object3D.position));
             note.setAttribute('pointer');
 
-            el.appendChild(note);
+            scene.appendChild(note);
         }   else {
-                note.setAttribute('position', el.object3D.worldToLocal(e.detail.intersection.object.el.object3D.position));
+                note.setAttribute('position', el.object3D.worldToLocal(intersectedObject.el.object3D.position));
             }
         }
         
-      this.removeNote = function(e){
+      this.removeNote = function(){
         //this.note.setAttribute('material', 'opacity: 0; transparent: true;');
         if (this.note) {
-            el.removeChild(this.note);
+            scene.removeChild(this.note);
             this.note=null;
         };
       }

@@ -24,55 +24,47 @@ AFRAME.registerComponent('playground', {
                                     el.object3D.position
                                 );
                 // Adding the note as a child to the stave element and changing the state to occupied
-                intersectedObject.el.removeState('free');                
+                intersectedObject.el.removeState('free');
+                intersectedObject.el.addState('occupied');                
                 intersectedObject.el.appendChild(note.HTMLelement);
                 stave.addNote(note);
                 note.playTone();
-                
-                console.log(intersectedObject);
+
                 console.log(note.tone + ' ' + note.frequency);
-                //el.removeEventListener('click', this.attachNote);
                 console.log(stave.notes);
-                //el.addEventListener('click', this.detachNote);
-            } else {       
-                //console.log('occupied');
-                console.log(e.target);
-                let id = intersectedObject.el.getAttribute('id');
-                console.log(id + " " + stave.notes[id]);
-                if(stave.notes[id]){
-                    stave.notes[id].HTMLelement.remove();
+            } else {
+                // Detach and delete the note by clicking on the stave, not on the note itself
+                if(intersectedObject.el.children[0]){
+                    let id = intersectedObject.el.children[0].getAttribute('id');
+                    intersectedObject.el.removeChild(intersectedObject.el.childNodes[0]); //deleting the sphere as a child of the stave a-plane element
                     stave.removeNote(stave.notes[id]);
-                };
-                
-                //note.HTMLelement.setAttribute('material', 'opacity: 0.5; transparent: true')
-                //note.HTMLelement.remove();
-                //stave.removeNote(note);
-                //el.removeEventListener('click', this.detachNote);
-                //el.addEventListener('click', this.attachNote);
+
+                    console.log(stave.notes);
+                    intersectedObject.el.removeState('occupied');  
+                    intersectedObject.el.addState('free');
+                } else {
+                    // When clicked on the sphere itself, not on the a-plane stave element:
+                    let id = intersectedObject.el.getAttribute('id');
+                    intersectedObject.el.remove();
+                    stave.removeNote(stave.notes[id]);
+
+                    console.log(stave.notes);
+                    intersectedObject.el.removeState('occupied');  
+                    intersectedObject.el.addState('free');
+                }                       
             }
         }             
         
-        this.detachNote = function(e) {            
-            let intersectedObject = e.detail.intersection.object;
-            console.log(intersectedObject.is('occupied'));
-
-            /*let note = stave.notes.find(note => note.HTMLelement === intersectedObject);
-
-            //note.HTMLelement.setAttribute('material', 'opacity: 0.5; transparent: true')
-            note.HTMLelement.remove();
-            stave.removeNote(note);
-            el.removeEventListener('click', this.detachNote);
-            el.addEventListener('click', this.attachNote);*/
-        }
+        
 
         el.addEventListener('click', this.attachNote);
 
         
         this.emptyStave = function() {
-            //el.removeState('free');
-            //el.addState('free');
             stave.notes.forEach(note => {
                 if(note.HTMLelement){
+                    note.HTMLelement.parentNode.removeState('occupied');
+                    note.HTMLelement.parentNode.addState('free');
                     note.HTMLelement.remove();
                 }
                 stave.removeNotes();        

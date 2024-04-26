@@ -11,10 +11,10 @@ class Note {
         this.HTMLelement.setAttribute('scale', '.1 .1 .1');
         this.HTMLelement.setAttribute('position', position);
         this.HTMLelement.setAttribute('frequency', frequency);
+        this.HTMLelement.setAttribute('index', this.index);
         this.HTMLelement.setAttribute('visible', 'true');
         this.HTMLelement.classList.add(tone);
 
-        //this.playTone(this.frequency);
     }
     
     playTone() {
@@ -41,21 +41,6 @@ class Note {
             audioCtx.close();
         }, 1000); // Play tone for 1000 ms
     }
-    
-    
-    getHTMLelement(){
-        return this.HTMLelement;
-    }
-    getTone() {
-        return this.tone;
-    }
-    
-    getId() {
-        return this.id;
-    }
-    
-    getColumn(){
-        return this.column;
-    }
+   
 }
 module.exports = Note;
