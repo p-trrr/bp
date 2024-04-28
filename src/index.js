@@ -1,4 +1,4 @@
-//require('aframe');
+//require('aframe')
 require('aframe-environment-component')
 require('./classes/Note.js')
 require('./classes/Stave.js')

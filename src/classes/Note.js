@@ -41,6 +41,23 @@ class Note {
             audioCtx.close();
         }, 1000); // Play tone for 1000 ms
     }
-   
+   getID(){
+    return this.id;
+   }
+   getTone(){
+    return this.tone;
+   }
+   getIndex(){
+    return this.index;
+   }
+   getFrequency(){
+    return this.frequency;
+   }
+   getHTMLelement(){
+    return this.HTMLelement;
+   }
+   getPosition(){
+    return this.position;
+   }
 }
 module.exports = Note;

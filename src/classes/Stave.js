@@ -76,6 +76,9 @@ class Stave{
             });
         } else {console.log("No notes to play");}
     }
+    getNotes(){
+        return this.notes;
+    }
 }
 
 module.exports = Stave;
