@@ -79,6 +79,76 @@ class Stave{
     getNotes(){
         return this.notes;
     }
+    positionNoteOnStave(note) {
+        const xPos = -2;
+        const yPosMap = {
+          "C4": 0.8, "D4": 1.0, "E4": 1.2, "F4": 1.4, "G4": 1.6,
+          "A4": 1.8, "H4": 2.0, "C5": 2.2, "D5": 2.4, "E5": 2.6, "F5": 2.8, "G5": 3.0
+        };
+        const yPos = yPosMap[note.tone] || 0.8; // Výchozí pozice, pokud tón není nalezen
+        const zPos = -4;
+        const position = `${xPos + (0.625 * note.index)} ${yPos} ${zPos}`;
+        
+        return position;
+    }
+
+    async getRandomInterval(){
+        try {
+            const response = await fetch('/api/selectInterval/randomNotes');
+            if (!response.ok) {
+                throw new Error('No notes loaded from the server.');
+            } else {
+                const data = await response.json();
+                console.log(data);
+                const stave = document.querySelector('#stave');
+                const notes = data.notes;
+                const interval = data.interval;
+
+                if (notes && notes.length > 0) {
+                    notes.forEach(note => {
+                        const entity = document.createElement('a-sphere');
+                        entity.setAttribute('position', this.positionNoteOnStave(note));
+                        entity.setAttribute('material', 'color: red');
+                        entity.setAttribute('id', note.id);
+                        entity.setAttribute('scale', '.1 .1 .1');
+                        entity.setAttribute('frequency', note.frequency);
+                        entity.setAttribute('index', note.index);
+                        entity.setAttribute('visible', 'true');
+                        stave.appendChild(entity);
+                    });
+                console.log(interval);
+                return data;
+                }
+            } 
+        } catch (error) {
+                console.error('Failed to fetch data:', error);
+                return null; // Return null or an appropriate value in case of an error
+        }
+    }
+/*
+    async projectRandomInterval(data){
+        const scene = document.querySelector('a-scene');
+        const notes = data.notes;
+        const interval = data.interval;
+
+        if (notes && notes.length > 0) {
+            notes.forEach(note => {
+                const entity = document.createElement('a-sphere');
+                entity.setAttribute('position', this.positionNoteOnStave(note));
+                entity.setAttribute('color', 'red');
+                entity.setAttribute('id', note.id);
+                entity.setAttribute('scale', '.1 .1 .1');
+                entity.setAttribute('frequency', note.frequency);
+                entity.setAttribute('index', note.index);
+                entity.setAttribute('visible', 'true');
+                scene.appendChild(entity);
+            });
+            console.log(interval);
+        } else {
+            console.error('No notes received from the server.');
+        }
+
+    }*/
 }
 
 module.exports = Stave;
