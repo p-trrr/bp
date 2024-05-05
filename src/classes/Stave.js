@@ -1,3 +1,5 @@
+const Note = require("./Note");
+
 class Stave{
     constructor() {
         this.index = 0;
@@ -18,8 +20,7 @@ class Stave{
         this.HTMLelement.setAttribute('data-raycastable', '')
         this.HTMLelement.setAttribute('playground', '');
         document.querySelector('a-scene').appendChild(this.HTMLelement);
-        
-
+    
         const xPos = -2;
         const yPos = [0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8];
         const zPos = -4;
@@ -28,28 +29,27 @@ class Stave{
     
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.maxIndex; j++) {
-                index = j;
+                const index = j;
                 const plane = document.createElement('a-plane');
                 const position = `${xPos + (0.625 * j)} ${yPos[i]} ${zPos}`;
-
+    
                 plane.setAttribute('position', position);
                 plane.setAttribute('width', '0.625');
                 plane.setAttribute('height', '0.2');
                 plane.setAttribute('rotation', '0 0 0');
                 plane.setAttribute('material', 'opacity: 0; transparent: true');
                 plane.setAttribute('visible', 'true');
-
-                plane.setAttribute('class', tones[i]);
-                plane.setAttribute('index', index[i]);
+    
+                plane.classList.add(tones[i], 'free'); // Use classList.add to add classes
+                plane.setAttribute('index', index);
                 plane.setAttribute('frequency', frequencies[i]);
-                
-                plane.addState('free');
+    
                 this.HTMLelement.appendChild(plane);
             }
         }
         console.log('Stave created');
-
     }
+    
       
     addNote(note) {
         this.notes.push(note);
@@ -60,8 +60,81 @@ class Stave{
     }
 
     removeNotes() {
-        this.notes=[];
+        /*this.notes.forEach(note => {
+            if(note.HTMLelement){
+                //console.log(note.HTMLelement.object3D.name);
+                note.HTMLelement.parentNode.removeState('occupied');
+                note.HTMLelement.parentNode.addState('free');
+                note.HTMLelement.remove();
+            }
+        this.notes=[];*/
+        this.notes.forEach(note => {
+            if(note.HTMLelement && note.HTMLelement.parentNode){
+                note.HTMLelement.parentNode.classList.replace('occupied', 'free');
+                //note.HTMLelement.parentNode.remove(note.HTMLelement);
+                note.HTMLelement.remove();
+            }
+        });
+        this.notes=[];  
+    }  
+
+    async getRandomInterval(){
+        try {
+            const response = await fetch('/api/selectInterval/randomNotes');
+            if (!response.ok) {
+                throw new Error('No notes loaded from the server.');
+            } else {
+                const data = await response.json();
+                console.log(data);
+                const stave = document.querySelector('#stave');
+                const notes = data.notes;
+                const interval = data.interval;
+
+                this.removeNotes();
+
+                if (notes && notes.length > 0) {
+                    notes.forEach(note => {
+                        const sceneEntity = document.createElement('a-sphere');
+                        //find the parent element based on the tone and index attributes
+                        const parentObject = this.findElement(note.tone, note.index);
+                        if(parentObject.classList.contains('free')){
+                            parentObject.classList.replace('free', 'occupied');
+                        } else {
+                                note.HTMLelement.parentNode.classList.add('occupied');
+                        }
+
+                        parentObject.classList.add('occupied');
+                        //sceneEntity.setAttribute('position', parentObject.el.object3D.worldToLocal(parentObject.getAttribute('position')));
+                        sceneEntity.setAttribute('color', 'red');
+                        sceneEntity.setAttribute('id', note.id);
+                        sceneEntity.setAttribute('scale', '.1 .1 .1');
+                        sceneEntity.setAttribute('frequency', note.frequency);
+                        sceneEntity.setAttribute('index', note.index);
+                        sceneEntity.setAttribute('visible', 'true');
+                        sceneEntity.classList.add(note.tone, note.index);
+        
+                        parentObject.appendChild(sceneEntity);
+
+                        this.notes.push(new Note(
+                            note.id,
+                            note.tone,
+                            note.index,
+                            note.frequency,
+                            parentObject.getAttribute('position')
+                        ));
+                    });
+
+                this.playTones()
+                console.log(interval);
+                return data;
+                }
+            } 
+        } catch (error) {
+                console.error('Failed to fetch data:', error);
+                return null; // Return null or an appropriate value in case of an error
+        }
     }
+    
     playTones() {
         if (this.notes.length > 0){
             delay = 1000;
@@ -76,9 +149,7 @@ class Stave{
             });
         } else {console.log("No notes to play");}
     }
-    getNotes(){
-        return this.notes;
-    }
+
     positionNoteOnStave(note) {
         const xPos = -2;
         const yPosMap = {
@@ -92,63 +163,16 @@ class Stave{
         return position;
     }
 
-    async getRandomInterval(){
-        try {
-            const response = await fetch('/api/selectInterval/randomNotes');
-            if (!response.ok) {
-                throw new Error('No notes loaded from the server.');
-            } else {
-                const data = await response.json();
-                console.log(data);
-                const stave = document.querySelector('#stave');
-                const notes = data.notes;
-                const interval = data.interval;
-
-                if (notes && notes.length > 0) {
-                    notes.forEach(note => {
-                        const entity = document.createElement('a-sphere');
-                        entity.setAttribute('position', this.positionNoteOnStave(note));
-                        entity.setAttribute('material', 'color: red');
-                        entity.setAttribute('id', note.id);
-                        entity.setAttribute('scale', '.1 .1 .1');
-                        entity.setAttribute('frequency', note.frequency);
-                        entity.setAttribute('index', note.index);
-                        entity.setAttribute('visible', 'true');
-                        stave.appendChild(entity);
-                    });
-                console.log(interval);
-                return data;
-                }
-            } 
-        } catch (error) {
-                console.error('Failed to fetch data:', error);
-                return null; // Return null or an appropriate value in case of an error
-        }
+    findElement(tone, index) {
+        // Select all elements that have the specific index
+        const candidates = document.querySelectorAll(`[index="${index}"]`);
+    
+        // Filter these candidates to find those whose first class matches `firstClass`
+        const filtered = Array.from(candidates).filter(el => el.classList[0] === tone);
+    
+        // Return the first match, or null if none found
+        return filtered.length > 0 ? filtered[0] : null;
     }
-/*
-    async projectRandomInterval(data){
-        const scene = document.querySelector('a-scene');
-        const notes = data.notes;
-        const interval = data.interval;
-
-        if (notes && notes.length > 0) {
-            notes.forEach(note => {
-                const entity = document.createElement('a-sphere');
-                entity.setAttribute('position', this.positionNoteOnStave(note));
-                entity.setAttribute('color', 'red');
-                entity.setAttribute('id', note.id);
-                entity.setAttribute('scale', '.1 .1 .1');
-                entity.setAttribute('frequency', note.frequency);
-                entity.setAttribute('index', note.index);
-                entity.setAttribute('visible', 'true');
-                scene.appendChild(entity);
-            });
-            console.log(interval);
-        } else {
-            console.error('No notes received from the server.');
-        }
-
-    }*/
 }
 
 module.exports = Stave;
