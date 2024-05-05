@@ -6,7 +6,6 @@ class Stave{
         this.maxIndex = 8;
         this.notes = [];
         this.rows = 12;
-        //this.columns = 8;       
         this.HTMLelement = document.querySelector('#stave');
         this.currentMaxId = 0;
         
@@ -60,14 +59,6 @@ class Stave{
     }
 
     removeNotes() {
-        /*this.notes.forEach(note => {
-            if(note.HTMLelement){
-                //console.log(note.HTMLelement.object3D.name);
-                note.HTMLelement.parentNode.removeState('occupied');
-                note.HTMLelement.parentNode.addState('free');
-                note.HTMLelement.remove();
-            }
-        this.notes=[];*/
         this.notes.forEach(note => {
             if(note.HTMLelement && note.HTMLelement.parentNode){
                 note.HTMLelement.parentNode.classList.replace('occupied', 'free');
@@ -86,7 +77,6 @@ class Stave{
             } else {
                 const data = await response.json();
                 console.log(data);
-                const stave = document.querySelector('#stave');
                 const notes = data.notes;
                 const interval = data.interval;
 
@@ -94,36 +84,28 @@ class Stave{
 
                 if (notes && notes.length > 0) {
                     notes.forEach(note => {
-                        const sceneEntity = document.createElement('a-sphere');
-                        //find the parent element based on the tone and index attributes
-                        const parentObject = this.findElement(note.tone, note.index);
+                        // Finding the element on the stave where the note should be placed
+                        const parentObject = this.findElement(note.tone, 3);
+                        // Setting up the status of the element to occupied and allow the removeNotes function to remove the notes from the stave
                         if(parentObject.classList.contains('free')){
                             parentObject.classList.replace('free', 'occupied');
                         } else {
-                                note.HTMLelement.parentNode.classList.add('occupied');
+                                parentObject.classList.add('occupied');
                         }
-
                         parentObject.classList.add('occupied');
-                        //sceneEntity.setAttribute('position', parentObject.el.object3D.worldToLocal(parentObject.getAttribute('position')));
-                        sceneEntity.setAttribute('color', 'red');
-                        sceneEntity.setAttribute('id', note.id);
-                        sceneEntity.setAttribute('scale', '.1 .1 .1');
-                        sceneEntity.setAttribute('frequency', note.frequency);
-                        sceneEntity.setAttribute('index', note.index);
-                        sceneEntity.setAttribute('visible', 'true');
-                        sceneEntity.classList.add(note.tone, note.index);
-        
-                        parentObject.appendChild(sceneEntity);
 
-                        this.notes.push(new Note(
+                        // Creating the note entity
+                        const sceneEntity = new Note(
                             note.id,
                             note.tone,
                             note.index,
-                            note.frequency,
-                            parentObject.getAttribute('position')
-                        ));
+                            note.frequency
+                        );
+                        // Adding the note to the stave
+                        this.notes.push(sceneEntity);
+                        parentObject.appendChild(sceneEntity.HTMLelement);                        
                     });
-
+                // Play the tones of the interval
                 this.playTones()
                 console.log(interval);
                 return data;
@@ -131,7 +113,7 @@ class Stave{
             } 
         } catch (error) {
                 console.error('Failed to fetch data:', error);
-                return null; // Return null or an appropriate value in case of an error
+                return null;
         }
     }
     

@@ -22,8 +22,7 @@ AFRAME.registerComponent('playground', {
                     stave.currentMaxId,
                     intersectedObject.el.getAttribute('class').split(' ')[0], // Adjusted to get the first class
                     intersectedObject.el.getAttribute('index'), 
-                    intersectedObject.el.getAttribute('frequency'), 
-                    el.object3D.position
+                    intersectedObject.el.getAttribute('frequency')
                 );
         
                 intersectedObject.el.classList.replace('free', 'occupied');

@@ -5,13 +5,12 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 </head>
     <body>
-        <a-scene>
+        <a-scene cursor="rayOrigin: mouse">
             <a-entity id="cam"
                 camera position="0 2 0"                
                 wasd-controls="false"
-                raycaster="objects: [data-raycastable]"
-                look-controls                
-                ><a-cursor></a-cursor>
+                raycaster="objects: [data-raycastable]"                
+                look-controls>
             </a-entity>
             <a-entity id="environment" environment="preset: contact" lightPosition="0 4 2"></a-entity>
 

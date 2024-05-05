@@ -1,5 +1,5 @@
 class Note {
-    constructor(id, tone, index, frequency, position) {
+    constructor(id, tone, index, frequency) {
         this.id = id;
         this.tone = tone; //class of the intersected object: intersectedObject.el.getAttribute('class');
         this.index = index;
@@ -9,7 +9,6 @@ class Note {
         this.HTMLelement.setAttribute('id', this.id);
         this.HTMLelement.setAttribute('color', 'red');;
         this.HTMLelement.setAttribute('scale', '.1 .1 .1');
-        this.HTMLelement.setAttribute('position', position);
         this.HTMLelement.setAttribute('frequency', frequency);
         this.HTMLelement.setAttribute('index', this.index);
         this.HTMLelement.setAttribute('visible', 'true');
