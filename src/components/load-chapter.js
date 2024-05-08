@@ -26,25 +26,40 @@ AFRAME.registerComponent('load-chapter', {
   },
   init: function () {
     this.loadChapter();
-    console.log('load-chapter component initialized');
   },
   update: function (oldData) {
     if (oldData.chapterId !== this.data.chapterId) {
       this.loadChapter();
     }
   },
-  loadChapter: function () {
-    let el = this.el;
-    let chapterId = this.data.chapterId;
-    fetch(`http://localhost:3001/api/chapter/${chapterId}`)
-      .then(response => response.json())
-      .then(data => {
-        while (el.firstChild) {
-          el.removeChild(el.firstChild);
+  loadChapter: async function () {
+    var chapterEl = document.querySelector('#chapter');
+    var chapterId = this.data.chapterId;
+      
+    if (typeof chapterId === 'undefined') {
+      console.error('Chapter ID is undefined!');
+      return;
+    }
+  
+    try {
+      const response = await fetch(`http://localhost:3001/api/chapter/${chapterId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      console.log('Loading chapter with ID:', chapterId);
+      const data = await response.json();
+  
+      // Nejprve odstraněte všechny stávající entity
+      if(chapterEl.firstChild!==null){
+        while (chapterEl.firstChild) {
+          chapterEl.removeChild(chapterEl.firstChild);
         }
-        console.log(data);
-        appendEntities(data, el);
-      })
-      .catch(error => console.error('Error loading the chapter:', error));
+      }
+  
+      // Poté přidejte nové entity
+      appendEntities(data, chapterEl);
+    } catch (error) {
+      console.error('Error loading the chapter:', error);
+    }
   }
 });

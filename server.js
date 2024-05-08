@@ -19,7 +19,7 @@ app.get('/api/chapter/:id', (req, res) => {
 
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
-      res.status(500).send('Error while loading the chapter');
+      res.status(500).json({'error': 'Error while loading the chapter'});
       return;
     }
     res.json(JSON.parse(data));

@@ -26,7 +26,8 @@ AFRAME.registerComponent('playground', {
                 );
         
                 intersectedObject.el.classList.replace('free', 'occupied');
-                //intersectedObject.el.classList.add('occupied');                
+                //intersectedObject.el.classList.add('occupied');
+                console.log(intersectedObject);                
                 intersectedObject.el.appendChild(note.HTMLelement);
                 stave.addNote(note);
                 note.playTone();
@@ -55,10 +56,7 @@ AFRAME.registerComponent('playground', {
                 }                       
             }
         });
-        
 
-
-        
         emptyTheStaveButton.addEventListener('click', function() {
             stave.removeNotes();        
         });        
