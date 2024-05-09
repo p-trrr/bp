@@ -60,11 +60,64 @@ AFRAME.registerComponent('playground', {
         });        
 
         playButton.addEventListener('click', () => stave.playTones());
-        randomIntervalButton.addEventListener('click', () => stave.getRandomInterval());
+        //randomIntervalButton.addEventListener('click', () => stave.getRandomInterval());
+        
+        
+        randomIntervalButton.addEventListener('click', async function() {
+            // call the stave.getRandomInterval() function to get the random interval and the interval options
+            const randomIntervals = await stave.getRandomInterval();
+            const correctInterval = randomIntervals.correctInterval;
+            const options = randomIntervals.optionsIntervals;
+            // Find the buttons where the interval options are displayed
+            const buttons = document.querySelector('#interval-options');
+            console.log(buttons);
+            console.log(randomIntervals.optionsIntervals);
+            // If the options are available and there are three options, update the buttons with the options
+            if (options && options.length === 3) {
+                const optionButtons = buttons.querySelectorAll('.interval-option');
+                console.log(optionButtons);
+                // Update the text of the buttons with the interval options
+                optionButtons.forEach((element, index) => {
+                    let textElement = element.querySelector('a-text');
+                    console.log(textElement);
+                    console.log(options[index] + ' ' + index);
+                    if (textElement) {
+                        textElement.setAttribute('value', options[index]);
+                    }
+                });
+            }
+        });
     },
+
+
+
+
+
+
+
+    chooseCorrectInterval: function () {
+        const randomIntervals = this.stave.getRandomInterval();
+        const correctInterval = randomIntervals.correctInterval;
+        const options = randomIntervals.optionsIntervals;
+        const buttons = document.querySelector('#interval-options');
+        console.log(buttons);
+        console.log(randomIntervals.optionsIntervals);
+
+        if (options && options.length === 3) {
+            const optionButtons = buttons.querySelectorAll('[interval-option]');
+            optionButtons.forEach((element, index) => {
+                let textElement = element.querySelector('a-text');
+                console.log(textElement);
+                console.log(options[index] + ' ' + index);
+                if (textElement) {
+                    textElement.setAttribute('value', options[index]);
+                }
+            });
+        }
+    },
+
     remove: function () {
         this.stave.removeNotes();
-        this.el.removeEventListener
     }
     
 });

@@ -78,7 +78,8 @@ class Stave{
                 const data = await response.json();
                 console.log(data);
                 const notes = data.notes;
-                const interval = data.interval;
+                const interval = data.correctInterval;
+                const options = data.optionsIntervals;
 
                 this.removeNotes();
 
@@ -106,7 +107,7 @@ class Stave{
                         parentObject.appendChild(sceneEntity.HTMLelement);                        
                     });
                 // Play the tones of the interval
-                this.playTones()
+                //this.playTones()
                 console.log(interval);
                 return data;
                 }

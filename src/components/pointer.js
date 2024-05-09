@@ -19,7 +19,7 @@ AFRAME.registerComponent('pointer', {
         }   else {
                 note.setAttribute('position', el.object3D.worldToLocal(intersectedObject.el.object3D.position));
             }
-        }
+      }
         
       this.removeNote = function(){
         //this.note.setAttribute('material', 'opacity: 0; transparent: true;');

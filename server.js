@@ -38,10 +38,24 @@ app.get('/api/selectInterval/randomNotes', (req, res) => {
 
   randomNotes.push(notes[randomIndex2]);
 
-  const intervalDistance = Math.abs(randomNotes[1].id - randomNotes[0].id);
-  const interval = intervalDistance === 0 ? 'unisono' : intervalDistance === 1 ? 'velka sekunda'  : intervalDistance === 2 ? 'velka tercie' : intervalDistance === 3 ? 'kvarta' : intervalDistance === 4 ? 'kvinta' : intervalDistance === 5 ? 'velka sexta' : intervalDistance === 6 ? 'velka septima' : 'octave';
+  const intervals = ['unisono', 'velka sekunda', 'velka tercie', 'kvarta', 'kvinta', 'velka sexta', 'velka septima', 'oktava'];
+  let intervalDistance = Math.abs(randomNotes[1].id - randomNotes[0].id);
+  let correctInterval = intervalDistance === 0 ? 'unisono' : intervalDistance === 1 ? 'velka sekunda'  : intervalDistance === 2 ? 'velka tercie' : intervalDistance === 3 ? 'kvarta' : intervalDistance === 4 ? 'kvinta' : intervalDistance === 5 ? 'velka sexta' : intervalDistance === 6 ? 'velka septima' : 'oktava';
 
-  res.json({notes: randomNotes, interval: interval});
+  let wrongIntervals = intervals.filter(interval => interval !== correctInterval);
+  // Randomly select two intervals from the wrongIntervals array
+  let optionsIntervals = [];
+  for(let i = 0; i < 2; i++) {
+    let randomIndex = Math.floor(Math.random() * wrongIntervals.length);
+    optionsIntervals.push(wrongIntervals[randomIndex]);
+    wrongIntervals.splice(randomIndex, 1); // Remove the selected interval from the array
+  }
+
+  // Add the correct interval to the optionsIntervals
+  optionsIntervals.push(correctInterval);
+  optionsIntervals.sort(() => Math.random() - 0.5); // Shuffle the array
+
+  res.json({notes: randomNotes, correctInterval: correctInterval, optionsIntervals: optionsIntervals});
 });
 
 
