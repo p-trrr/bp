@@ -9,11 +9,11 @@
             <a-entity id="cam"
                 camera position="0 2 0"                
                 wasd-controls="false"
-                raycaster="objects: data-raycastable"                
+                raycaster="objects: .raycastable"                
                 look-controls>
             </a-entity>
             <a-entity id="environment" environment="preset: contact" lightPosition="0 4 2"></a-entity>
-            <a-entity id="chapter" load-chapter data-raycastable></a-entity>
+            <a-entity id="chapter" load-chapter class=raycastable></a-entity>
 
             <a-plane id="menu-button" menu position="-0 .5 -1.8" rotation="-40 0 0" color="white" width="2" height="1" scale=".3 .3 1"
                      animation__mousedown="property: components.material.material.color; type: color; to: yellow; startEvents: mousedown; dur: 050"

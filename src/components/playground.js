@@ -5,16 +5,14 @@ AFRAME.registerComponent('playground', {
     init: function () {
         const el = this.el;
         const stave = new Stave();
-        const previousButton = document.querySelector('#prev-button');
-        const nextButton = document.querySelector('#next-button');
+        this.stave = stave;
         const playButton = document.querySelector('#play-button');
         const emptyTheStaveButton = document.querySelector('#empty-stave-button');
         const randomIntervalButton = document.querySelector('#random-interval');
 
         stave.generateStave();     
         
-        // Attaching (or removing) the note on the stave on click
-        el.addEventListener('click', function(e) {
+        el.addEventListener('click',  function(e) {
             let intersectedObject = e.detail.intersection.object;
         
             if(intersectedObject.el.classList.contains('free')){
@@ -27,7 +25,6 @@ AFRAME.registerComponent('playground', {
         
                 intersectedObject.el.classList.replace('free', 'occupied');
                 //intersectedObject.el.classList.add('occupied');
-                console.log(intersectedObject);                
                 intersectedObject.el.appendChild(note.HTMLelement);
                 stave.addNote(note);
                 note.playTone();
@@ -35,9 +32,9 @@ AFRAME.registerComponent('playground', {
                 console.log(note.tone + ' ' + note.frequency);
                 console.log(stave.notes);
             } else {
-                if(intersectedObject.el.children[0]){
-                    let id = intersectedObject.el.children[0].getAttribute('id');
-                    intersectedObject.el.removeChild(intersectedObject.el.children[0]);
+                if(intersectedObject.el.firstChild){
+                    let id = intersectedObject.el.firstChild.getAttribute('id');
+                    intersectedObject.el.removeChild(intersectedObject.el.firstChild);
                     stave.removeNote(stave.notes[id]);
         
                     console.log(stave.notes);
@@ -56,16 +53,18 @@ AFRAME.registerComponent('playground', {
                 }                       
             }
         });
+        //this.el.addEventListener('click', this.noteAttachment);
 
         emptyTheStaveButton.addEventListener('click', function() {
             stave.removeNotes();        
         });        
-    
+
         playButton.addEventListener('click', () => stave.playTones());
         randomIntervalButton.addEventListener('click', () => stave.getRandomInterval());
-
-       
-        
+    },
+    remove: function () {
+        this.stave.removeNotes();
+        this.el.removeEventListener
     }
     
 });

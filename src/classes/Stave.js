@@ -18,7 +18,7 @@ class Stave{
         }
         this.HTMLelement.setAttribute('data-raycastable', '')
         this.HTMLelement.setAttribute('playground', '');
-        document.querySelector('a-scene').appendChild(this.HTMLelement);
+        document.querySelector('#chapter').appendChild(this.HTMLelement);
     
         const xPos = -2;
         const yPos = [0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8];

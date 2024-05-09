@@ -12,6 +12,9 @@ AFRAME.registerComponent('switch-chapter', {
       let chapterEntity = document.querySelector('#chapter');
       let currentId = chapterEntity.getAttribute('load-chapter').chapterId;
       let newId = currentId - 1;
+      if (newId < 0) {
+        newId = 0;
+      }
       chapterEntity.setAttribute('load-chapter', 'chapterId', newId);
     });
 

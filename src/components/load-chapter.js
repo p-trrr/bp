@@ -1,3 +1,5 @@
+import { debounce } from 'lodash';
+
 function appendEntities(entities, parentEl) {
   entities.forEach(entity => {
     let entityEl = document.createElement(entity.tag); // Vytvoří prvek podle zadaného tagu
@@ -29,10 +31,11 @@ AFRAME.registerComponent('load-chapter', {
   },
   update: function (oldData) {
     if (oldData.chapterId !== this.data.chapterId) {
+      console.log('Chapter ID changed from', oldData.chapterId, 'to', this.data.chapterId);
       this.loadChapter();
     }
   },
-  loadChapter: async function () {
+  loadChapter: debounce(async function () {
     var chapterEl = document.querySelector('#chapter');
     var chapterId = this.data.chapterId;
       
@@ -61,5 +64,5 @@ AFRAME.registerComponent('load-chapter', {
     } catch (error) {
       console.error('Error loading the chapter:', error);
     }
-  }
+  }, 300),
 });
