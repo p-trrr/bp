@@ -21,10 +21,10 @@ class Stave{
         document.querySelector('#chapter').appendChild(this.HTMLelement);
     
         const xPos = -2;
-        const yPos = [0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8];
+        const yPos = [0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0];
         const zPos = -4;
         const tones = ["C4", "D4", "E4", "F4", "G4", "A4", "H4", "C5", "D5", "E5", "F5", "G5"];
-        const frequencies = [261.626, 293.665, 329.628, 349.228, 391.995, 440, 493.883, 523.251, 587.33, 659.255, 698.456];
+        const frequencies = [261.626, 293.665, 329.628, 349.228, 391.995, 440, 493.883, 523.251, 587.33, 659.255, 698.456, 783.991];
     
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.maxIndex; j++) {
@@ -75,6 +75,8 @@ class Stave{
             if (!response.ok) {
                 throw new Error('No notes loaded from the server.');
             } else {
+                this.removeNotes();
+                                
                 const data = await response.json();
                 console.log(data);
                 const notes = data.notes;
