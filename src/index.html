@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>A-Frame App</title>
+    <title>VR App</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 </head>
     <body>
         <a-scene cursor="rayOrigin: mouse">
             <a-entity id="cam"
-                camera 
+                camera                 
+                raycaster="objects: .raycastable"
                 position="0 2 0"                
                 wasd-controls="false"               
                 look-controls>
             </a-entity>
 
-            <a-entity laser-controls="hand: right"></a-entity>
+            <a-entity laser-controls="hand: right" ></a-entity>
             <a-entity id="environment" environment="preset: contact" lightPosition="0 4 2"></a-entity>
-            <a-entity id="chapter" load-chapter class=raycastable></a-entity>
+            <a-entity id="chapter" load-chapter class="raycastable"></a-entity>
 
             <a-plane id="menu-button" class="raycastable" menu position="-0 .5 -1.8" rotation="-40 0 0" color="white" width="2" height="1" scale=".3 .3 1"
                      animation__mousedown="property: components.material.material.color; type: color; to: yellow; startEvents: mousedown; dur: 050"

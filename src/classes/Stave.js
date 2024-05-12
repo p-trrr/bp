@@ -13,10 +13,10 @@ class Stave{
 
     generateStave() {
         if(!this.HTMLelement){
-            this.HTMLelement = document.createElement('a-plane');
+            this.HTMLelement = document.createElement('a-entity');
             this.HTMLelement.setAttribute('id', 'stave');
         }
-        this.HTMLelement.setAttribute('data-raycastable', '')
+        this.HTMLelement.classList.add('raycastable')
         this.HTMLelement.setAttribute('playground', '');
         document.querySelector('#chapter').appendChild(this.HTMLelement);
     

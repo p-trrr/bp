@@ -10,7 +10,7 @@ AFRAME.registerComponent('playground', {
         const el = this.el;
         const playButton = document.querySelector('#play-button');
         const emptyTheStaveButton = document.querySelector('#empty-stave-button');
-        const randomIntervalButton = document.querySelector('#random-interval');
+        
         
         const answerCounter = document.createElement('a-plane');
         answerCounter.setAttribute('material', 'opacity: 0; transparent: true;');
@@ -20,6 +20,9 @@ AFRAME.registerComponent('playground', {
         const answerText = document.createElement('a-text');
         answerText.setAttribute('position', '0 0 0.01');
         answerText.setAttribute('material', 'opacity: 1; transparent: false; color: black;');
+        if(document.querySelector('#random-interval')){
+            const randomIntervalButton = document.querySelector('#random-interval');
+        };
 
         answerCounter.appendChild(answerText);
         chapter.appendChild(answerCounter);
@@ -76,85 +79,61 @@ AFRAME.registerComponent('playground', {
         playButton.addEventListener('click', () => stave.playTones());
         //randomIntervalButton.addEventListener('click', () => stave.getRandomInterval());
         
+        if(document.querySelector('#random-interval')){
+            const randomIntervalButton = document.querySelector('#random-interval');
         
-        randomIntervalButton.addEventListener('click', async function() {
-            // call the stave.getRandomInterval() function to get the random interval and the interval options
-            const randomIntervals = await stave.getRandomInterval();
-            const correctInterval = randomIntervals.correctInterval;
-            const options = randomIntervals.optionsIntervals;
-            const buttons = document.querySelector('#interval-options');
+            randomIntervalButton.addEventListener('click', async function() {
+                // call the stave.getRandomInterval() function to get the random interval and the interval options
+                const randomIntervals = await stave.getRandomInterval();
+                const correctInterval = randomIntervals.correctInterval;
+                const options = randomIntervals.optionsIntervals;
+                const buttons = document.querySelector('#interval-options');
 
-            // If the options are available and there are three options, update the buttons with the options
-            if (options && options.length === 3) {
-                const optionButtons = buttons.querySelectorAll('.interval-option');
-                let correctAnswers = 0;
-                let totalQuestions = 0;
-                // Update the text of the buttons with the interval options
-                optionButtons.forEach((element, index) => {
-                    let textElement = element.querySelector('a-text');
-                    if (textElement) {
-                        textElement.setAttribute('value', options[index]);
-                    }
-        
-                    // Add event listener to option button
-                    element.addEventListener('click', async function() {
-                        totalQuestions++;
-                        // Check if the selected option is correct
-                        if (options[index] === correctInterval) {
-                            // If correct, change button color to green
-                            element.setAttribute('color', 'green');
-                            correctAnswers++;
-                        } else {
-                            // If not correct, change button color to red
-                            element.setAttribute('color', 'red');
+                // If the options are available and there are three options, update the buttons with the options
+                if (options && options.length === 3) {
+                    const optionButtons = buttons.querySelectorAll('.interval-option');
+                    let correctAnswers = 0;
+                    let totalQuestions = 0;
+                    // Update the text of the buttons with the interval options
+                    optionButtons.forEach((element, index) => {
+                        let textElement = element.querySelector('a-text');
+                        if (textElement) {
+                            textElement.setAttribute('value', options[index]);
                         }
-                        answerText.innerText = `${correctAnswers}/${totalQuestions}`;
-                        // Play tones
-                        stave.playTones();
-                
-                        // Wait for the duration of the sound, then change color back to white
-                        setTimeout(() => {
-                            element.setAttribute('color', 'white');
-                        }, 1000);
-                
-                        // If the selected option is correct, wait for 1 second and load another interval
-                        if (options[index] === correctInterval) {
-                            // Wait for 1 second
-                            await new Promise(resolve => setTimeout(resolve, 3000));
-                
-                            // Load another interval
-                            randomIntervalButton.click();
-                        }
+            
+                        // Add event listener to option button
+                        element.addEventListener('click', async function() {
+                            totalQuestions++;
+                            // Check if the selected option is correct
+                            if (options[index] === correctInterval) {
+                                // If correct, change button color to green
+                                element.setAttribute('color', 'green');
+                                correctAnswers++;
+                            } else {
+                                // If not correct, change button color to red
+                                element.setAttribute('color', 'red');
+                            }
+                            answerText.innerText = `${correctAnswers}/${totalQuestions}`;
+                            // Play tones
+                            stave.playTones();
+                    
+                            // Wait for the duration of the sound, then change color back to white
+                            setTimeout(() => {
+                                element.setAttribute('color', 'white');
+                            }, 1000);
+                    
+                            // If the selected option is correct, wait for 1 second and load another interval
+                            if (options[index] === correctInterval) {
+                                // Wait for 1 second
+                                await new Promise(resolve => setTimeout(resolve, 3000));
+                    
+                                // Load another interval
+                                randomIntervalButton.click();
+                            }
+                        });
                     });
-                });
-            }
-            stave.playTones();
-        });
-    },
-
-
-    
-
-
-
-
-    chooseCorrectInterval: function () {
-        const randomIntervals = this.stave.getRandomInterval();
-        const correctInterval = randomIntervals.correctInterval;
-        const options = randomIntervals.optionsIntervals;
-        const buttons = document.querySelector('#interval-options');
-        console.log(buttons);
-        console.log(randomIntervals.optionsIntervals);
-
-        if (options && options.length === 3) {
-            const optionButtons = buttons.querySelectorAll('[interval-option]');
-            optionButtons.forEach((element, index) => {
-                let textElement = element.querySelector('a-text');
-                console.log(textElement);
-                console.log(options[index] + ' ' + index);
-                if (textElement) {
-                    textElement.setAttribute('value', options[index]);
                 }
+                stave.playTones();
             });
         }
     },
