@@ -125,21 +125,32 @@ class Stave{
     
     playTones() {
         this.notes.sort((a, b) => a.index - b.index);
-        if (this.notes.length > 0) {
-            let delay = 1000; // Delay in milliseconds
     
-            this.notes.forEach((note, index) => {
-                setTimeout(() => {
+        // Group notes by index
+        const groupedNotes = this.notes.reduce((acc, note) => {
+            if (!acc[note.index]) {
+                acc[note.index] = [];
+            }
+            acc[note.index].push(note);
+            return acc;
+        }, {});
+    
+        // Get unique indexes in sorted order
+        const uniqueIndexes = [...new Set(this.notes.map(note => note.index))].sort((a, b) => a - b);
+    
+        let delay = 1000; // Delay in milliseconds
+    
+        uniqueIndexes.forEach((index, groupIndex) => {
+            setTimeout(() => {
+                groupedNotes[index].forEach(note => {
                     note.HTMLelement.setAttribute('color', 'white');
                     note.playTone();
                     setTimeout(() => {
                         note.HTMLelement.setAttribute('color', 'red');
-                    }, 1000);
-                }, delay * index); // Multiply delay by the index to stagger the start times
-            });
-        } else {
-            console.log("No notes to play");
-        }
+                    }, 1000); // Adjust this delay to match the tone's duration
+                });
+            }, delay * groupIndex); // Multiply delay by the groupIndex to stagger the start times of chords
+        });
     }
 
     positionNoteOnStave(note) {
