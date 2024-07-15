@@ -23,7 +23,7 @@ class Stave{
         const xPos = -2;
         const yPos = [0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0];
         const zPos = -4;
-        const tones = ["C4", "D4", "E4", "F4", "G4", "A4", "H4", "C5", "D5", "E5", "F5", "G5"];
+        const tones = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5", "F5", "G5"];
         const frequencies = [261.626, 293.665, 329.628, 349.228, 391.995, 440, 493.883, 523.251, 587.33, 659.255, 698.456, 783.991];
     
         for (let i = 0; i < this.rows; i++) {
@@ -56,6 +56,7 @@ class Stave{
     }
     removeNote(note) {
         this.notes.splice(this.notes.indexOf(note), 1);
+        this.currentMaxId--;
     }
 
     removeNotes() {
@@ -66,7 +67,9 @@ class Stave{
                 note.HTMLelement.remove();
             }
         });
-        this.notes=[];  
+        this.notes=[];
+        this.currentMaxId = 0;
+        this.index = 0;
     }  
 
     async getRandomInterval(){
@@ -121,25 +124,29 @@ class Stave{
     }
     
     playTones() {
-        if (this.notes.length > 0){
-            delay = 1000;
-
-            this.notes.forEach(note => {
+        this.notes.sort((a, b) => a.index - b.index);
+        if (this.notes.length > 0) {
+            let delay = 1000; // Delay in milliseconds
+    
+            this.notes.forEach((note, index) => {
                 setTimeout(() => {
+                    note.HTMLelement.setAttribute('color', 'white');
                     note.playTone();
-                    console.log("Playing " + note.tone);
-                }, delay);
-                delay += 1000;
-                
+                    setTimeout(() => {
+                        note.HTMLelement.setAttribute('color', 'red');
+                    }, 1000);
+                }, delay * index); // Multiply delay by the index to stagger the start times
             });
-        } else {console.log("No notes to play");}
+        } else {
+            console.log("No notes to play");
+        }
     }
 
     positionNoteOnStave(note) {
         const xPos = -2;
         const yPosMap = {
           "C4": 0.8, "D4": 1.0, "E4": 1.2, "F4": 1.4, "G4": 1.6,
-          "A4": 1.8, "H4": 2.0, "C5": 2.2, "D5": 2.4, "E5": 2.6, "F5": 2.8, "G5": 3.0
+          "A4": 1.8, "B4": 2.0, "C5": 2.2, "D5": 2.4, "E5": 2.6, "F5": 2.8, "G5": 3.0
         };
         const yPos = yPosMap[note.tone] || 0.8; // Výchozí pozice, pokud tón není nalezen
         const zPos = -4;

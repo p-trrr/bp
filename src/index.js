@@ -2,7 +2,7 @@
 require('aframe-environment-component')
 require('./classes/Note.js')
 require('./classes/Stave.js')
-
+require('tone')
 require('./components/pointer.js')
 require('./components/playground.js')
 require('./components/text-loader.js')

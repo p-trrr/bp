@@ -5,6 +5,7 @@ class Note {
         this.index = index;
         this.frequency = frequency;
         this.HTMLelement = document.createElement('a-sphere');
+        this.synth = new Tone.Synth().toDestination();
 
         this.HTMLelement.setAttribute('id', this.id);
         this.HTMLelement.setAttribute('color', 'red');;
@@ -16,7 +17,7 @@ class Note {
 
     }
     
-    playTone() {
+    /*playTone() {
         // create web audio api context
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
          // create Oscillator and gain node
@@ -28,9 +29,6 @@ class Note {
 
         gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
         gainNode.gain.linearRampToValueAtTime(0.2, (audioCtx.currentTime + 0.2));
-        
-    
-        //oscillator.type = 'square';
         oscillator.frequency.setValueAtTime(this.frequency, audioCtx.currentTime);
         //gainNode.gain.linearRampToValueAtTime(0, (audioCtx.currentTime + 1));
     
@@ -41,6 +39,11 @@ class Note {
             audioCtx.close();
             this.HTMLelement.setAttribute('color', 'red');
         }, 1000); // Play tone for 1000 ms
+    }*/
+    
+    playTone() {        
+        const now = Tone.now();
+        this.synth.triggerAttackRelease(this.tone, "8n", now);
     }
 
     getID(){return this.id;}

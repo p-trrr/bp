@@ -29,7 +29,10 @@ AFRAME.registerComponent('playground', {
 
         stave.generateStave();     
         
-        el.addEventListener('click',  function(e) {
+        el.addEventListener('click', async function(e) {
+            await Tone.start(); // Ensure Tone.js is started before proceeding
+            console.log("audio is ready");
+
             let intersectedObject = e.detail.intersection.object;
         
             if(intersectedObject.el.classList.contains('free')){
@@ -41,7 +44,6 @@ AFRAME.registerComponent('playground', {
                 );
         
                 intersectedObject.el.classList.replace('free', 'occupied');
-                //intersectedObject.el.classList.add('occupied');
                 intersectedObject.el.appendChild(note.HTMLelement);
                 stave.addNote(note);
                 note.playTone();
@@ -76,8 +78,11 @@ AFRAME.registerComponent('playground', {
             stave.removeNotes();        
         });        
 
-        playButton.addEventListener('click', () => stave.playTones());
-        //randomIntervalButton.addEventListener('click', () => stave.getRandomInterval());
+        playButton.addEventListener('click', async () => {
+            await Tone.start();
+            console.log("audio is ready");
+            stave.playTones();
+        });
         
         if(document.querySelector('#random-interval')){
             const randomIntervalButton = document.querySelector('#random-interval');
