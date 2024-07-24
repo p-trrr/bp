@@ -36,8 +36,8 @@ AFRAME.registerComponent('load-chapter', {
     }
   },
   loadChapter: debounce(async function () {
-    var chapterEl = document.querySelector('#chapter');
-    var chapterId = this.data.chapterId;
+    let chapterEl = document.querySelector('#chapter');
+    let chapterId = this.data.chapterId;
       
     if (typeof chapterId === 'undefined') {
       console.error('Chapter ID is undefined!');
@@ -52,14 +52,11 @@ AFRAME.registerComponent('load-chapter', {
       console.log('Loading chapter with ID:', chapterId);
       const data = await response.json();
   
-      // Nejprve odstraněte všechny stávající entity
       if(chapterEl.firstChild!==null){
         while (chapterEl.firstChild) {
           chapterEl.removeChild(chapterEl.firstChild);
         }
       }
-  
-      // Poté přidejte nové entity
       appendEntities(data, chapterEl);
     } catch (error) {
       console.error('Error loading the chapter:', error);

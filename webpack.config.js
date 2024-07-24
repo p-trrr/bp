@@ -10,7 +10,7 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'), // Output directory
         filename: '[name].js', // Name of the bundled file
         clean: true,
-        assetModuleFilename: '[name][ext]',
+        assetModuleFilename: 'assets/[name][ext]',
     },
     devServer: {
         static: {
@@ -43,6 +43,13 @@ module.exports = {
                 presets: ['@babel/preset-env']
             }
         }
+        },
+        {
+            test: /\.json$/,
+            type: 'asset/resource',
+            generator: {
+                filename: 'assets/[name][ext]'
+            }
         }
     ]
     }

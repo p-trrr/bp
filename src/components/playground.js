@@ -74,9 +74,11 @@ AFRAME.registerComponent('playground', {
         });
         //this.el.addEventListener('click', this.noteAttachment);
 
-        emptyTheStaveButton.addEventListener('click', function() {
-            stave.removeNotes();        
-        });        
+        if(emptyTheStaveButton){
+            emptyTheStaveButton.addEventListener('click', function() {
+                stave.removeNotes();        
+            }); 
+        }       
 
         playButton.addEventListener('click', async () => {
             await Tone.start();

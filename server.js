@@ -13,9 +13,9 @@ app.get('/api', (req, res) => {
   res.send('API is working');
 });
 
-app.get('/api/chapter/:id', (req, res) => {
-  const id = req.params.id;
-  const filePath = path.join(__dirname, 'src', 'chapters', `${id}.json`);
+app.get('/api/chapter/:chapterId', (req, res) => {
+  const chapterId = req.params.chapterId;
+  const filePath = path.join(__dirname, 'src', 'chapters', `${chapterId}.json`);
 
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
@@ -23,6 +23,36 @@ app.get('/api/chapter/:id', (req, res) => {
       return;
     }
     res.json(JSON.parse(data));
+  });
+});
+
+app.get('/api/texts/:chapterId/:textId', (req, res) => {
+  const chapterId = req.params.chapterId;
+  const textId = req.params.textId;
+  const filePath = path.join(__dirname, 'src', 'assets', 'texts.json');
+
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({'error': 'Error while loading the text'});
+      return;
+    }
+
+    const texts = JSON.parse(data);
+    const chapterTexts = texts[chapterId];
+
+    if (!chapterTexts) {
+      res.status(404).json({'error': 'Chapter not found'});
+      return;
+    }
+    const text = chapterTexts[textId];
+    console.log(chapterTexts);
+    console.log(text);
+    if (!text) {
+      res.status(404).json({'error': 'Text not found'});
+      return;
+    }
+
+    res.json(text);
   });
 });
 

@@ -1,37 +1,39 @@
-document.addEventListener('text-loader', () => {
-  let currentIndex = 0;
-  let texts = [];
+AFRAME.registerComponent('text-loader', {
+  schema: {
+    chapterId: { type: 'number', default: 1 },  // Chapter to display
+    textId: { type: 'number', default: 0 }  // Text index to display
+  },
+  init: function () {
+    this.textEntity = document.createElement('a-text');
+    this.textEntity.setAttribute('align', 'center');
+    this.textEntity.setAttribute('color', 'black');
+    this.textEntity.setAttribute('position', '0 1 -2');  // Adjust position as needed
+    this.el.appendChild(this.textEntity);
 
-  const loadedTexts = async () => {
-    try {
-      const response = await fetch('/src/assets/texts.json');
-      const data = await response.json();
-      texts = data.texts;
-      setText(); // Set text immediately after loading
-    } catch (error) {
-      console.error('Failed to load texts:', error);
+    this.fetchAndDisplay();
+  },
+  // Fetch the JSON file
+  fetchAndDisplay: function () {
+    let data = this.data;
+    fetch(`http://localhost:3001/api/texts/${data.chapterId}/${data.textId}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text(); // Use .text() instead of .json() if the response is a string
+      })
+      .then(textContent => {
+        console.log(data.chapterId, ', ', data.textId, ' text content:', textContent);
+        // Update the value of the text entity to show the actual text in the scene
+        this.textEntity.setAttribute('value', textContent);
+      })
+      .catch(error => {
+        console.error('Error fetching the text:', error);
+      });
+  },
+  update: function (oldData) {
+    if (oldData.chapterId !== this.data.chapterId) {
+      this.fetchAndDisplay();
     }
-  };
-
-  const setText = () => {
-    if (texts.length > 0) {
-      document.querySelector('#card-text').setAttribute('value', texts[currentIndex]);
-      console.log("Text set to index " + currentIndex);
-    } else {
-      console.log("No texts to display.");
-    }
-  };
-
-  loadedTexts(); // No need to use then(), as everything is handled inside loadedTexts
-
-  document.querySelector('#next-button').addEventListener('click', () => {
-    currentIndex = (currentIndex + 1) % texts.length;
-    setText();
-  });
-
-  document.querySelector('#prev-button').addEventListener('click', () => {
-    currentIndex = (currentIndex - 1 + texts.length) % texts.length;
-    setText();
-  });
-
+  }
 });
