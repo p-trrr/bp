@@ -8,6 +8,13 @@ AFRAME.registerComponent('playground', {
         const chapter = document.querySelector('#chapter');
 
         const el = this.el;
+
+        el.addEventListener('play-button-created', async () => {
+            await Tone.start();
+            console.log("audio is ready");
+            stave.playTones();
+        });
+
         const playButton = document.querySelector('#play-button');
         const emptyTheStaveButton = document.querySelector('#empty-stave-button');
         
@@ -30,7 +37,7 @@ AFRAME.registerComponent('playground', {
         stave.generateStave();     
         
         el.addEventListener('click', async function(e) {
-            await Tone.start(); // Ensure Tone.js is started before proceeding
+            await Tone.start(); // Tone.js is started before proceeding
             console.log("audio is ready");
 
             let intersectedObject = e.detail.intersection.object;
@@ -79,13 +86,16 @@ AFRAME.registerComponent('playground', {
                 stave.removeNotes();        
             }); 
         }       
+        if(playButton){
+            playButton.addEventListener('click', async () => {
+                await Tone.start();
+                console.log("audio is ready");
+                stave.playTones();
+            });
+        } else {
+            console.error('play button not found');
+        }
 
-        playButton.addEventListener('click', async () => {
-            await Tone.start();
-            console.log("audio is ready");
-            stave.playTones();
-        });
-        
         if(document.querySelector('#random-interval')){
             const randomIntervalButton = document.querySelector('#random-interval');
         

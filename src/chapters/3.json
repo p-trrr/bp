@@ -45,6 +45,16 @@
             }
         ]
     },
+    
+    {
+        "tag": "a-entity",
+        "id": "chapter-controls",
+        "position": "0 1 -2",
+        "rotation": "-15 0 0",
+        "scale": "1 1 1",
+        "control-buttons": "playButton: true",
+        "switch-chapter": true
+    },
     {
         "tag": "a-entity",
         "id": "stave",
@@ -52,83 +62,17 @@
         "pointer": true
     },
     {
-        "tag": "a-circle",
-        "id": "play-button",
-        "position": "0 1 -2",
-        "radius": ".2",
-        "rotation": "-15 0 0",
-        "animation__mousedown": "property: components.material.material.color; type: color; to: yellow; startEvents: mousedown; dur: 050",
-        "animation__mouseup": "property: components.material.material.color; type: color; to: white; startEvents: mouseup; dur: 050",
-        "children": [
-            {
-                "tag": "a-triangle",
-                "position": ".03 0 .01",
-                "scale": "0.2 0.2 1",
-                "rotation": "0 0 -90",
-                "color": "black"
-            }
-        ]
-    },
-    {
-        "tag": "a-circle",
-        "id": "next-button",
-        "switch-chapter": true,
-        "position": "0.5 1 -2",
-        "radius": "0.2",
-        "rotation": "-15 0 0",
-        "color": "#ECECEC",
-        "children": [
-            {
-                "tag": "a-plane",
-                "position": "0 0 0.01",
-                "rotation": "0 0 0",
-                "width": "0.2",
-                "height": "0.05",
-                "color": "black"
-            },
-            {
-                "tag": "a-triangle",
-                "position": "0.1 0 0.01",
-                "rotation": "0 0 -90",
-                "scale": "0.12 0.1 1",
-                "color": "black"
-            }
-        ]
-    },
-    {
-        "tag": "a-circle",
-        "id": "prev-button",
-        "switch-chapter": true,
-        "position": "-0.5 1 -2",
-        "radius": "0.2",
-        "rotation": "-15 0 0",
-        "color": "#ECECEC",
-        "animation__mousedown": "property: components.material.material.color; type: color; to: yellow; startEvents: mousedown; dur: 050",
-        "animation__mouseup": "property: components.material.material.color; type: color; to: white; startEvents: mouseup; dur: 050",
-        "children": [
-            {
-                "tag": "a-plane",
-                "position": "0 0 0.01",
-                "rotation": "0 0 0",
-                "width": "0.2",
-                "height": "0.05",
-                "color": "black"
-            },
-            {
-                "tag": "a-triangle",
-                "position": "-0.1 0 0.01",
-                "rotation": "0 0 90",
-                "scale": "0.12 0.1 1",
-                "color": "black"
-            }
-        ]
-    },
-    {
         "tag": "a-plane",
         "id": "text-plane",
+        "height": 1,
+        "width": 1.5,
+        "primitive": "plane",
         "position": "-1.5 1.5 -2",
-        "rotation": "1 15 0",
+        "rotation": "0 15 0",
         "scale": "1 1 0.5",
+        "control-buttons": "playButton: false; scale: 0.6 0.6 0.6; y: -0.3; previousButtonID: previous-text-button; nextButtonID: next-text-button",
         "text-loader": "chapterId: 1; textId: 0"
+        
+        
     }
 ]

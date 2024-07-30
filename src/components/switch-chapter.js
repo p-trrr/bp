@@ -1,6 +1,6 @@
 AFRAME.registerComponent('switch-chapter', {
   init: function() {
-    const previousButton = document.querySelector('#prev-button');
+    const previousButton = document.querySelector('#previous-button');
     const nextButton = document.querySelector('#next-button');
 
     if (!previousButton || !nextButton) {
