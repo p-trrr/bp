@@ -10,7 +10,7 @@ AFRAME.registerComponent('control-buttons', {
         // the next button
         const nextButton = document.createElement('a-circle');
         nextButton.setAttribute('id', this.data.nextButtonID);
-        nextButton.setAttribute('position', `0.5 ${this.data.y} 0.01`);
+        nextButton.setAttribute('position', `0.5 ${this.data.y} 0.05`);
         nextButton.setAttribute('scale', this.data.scale);
         nextButton.setAttribute('radius', '0.2');
         nextButton.setAttribute('color', '#ECECEC');
@@ -38,7 +38,7 @@ AFRAME.registerComponent('control-buttons', {
         // the previous button
         const previousButton = document.createElement('a-circle');
         previousButton.setAttribute('id', this.data.previousButtonID);
-        previousButton.setAttribute('position', `-0.5 ${this.data.y} 0.01`);
+        previousButton.setAttribute('position', `-0.5 ${this.data.y} 0.05`);
         previousButton.setAttribute('radius', '0.2');
         previousButton.setAttribute('color', '#ECECEC');
         previousButton.setAttribute('animation__mousedown', 'property: components.material.material.color; type: color; to: yellow; startEvents: mousedown; dur: 050');

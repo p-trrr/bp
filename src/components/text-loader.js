@@ -6,44 +6,149 @@ AFRAME.registerComponent('text-loader', {
     previousTextButtonID: { type: 'string', default: 'previous-text-button' }
   },
   init: function () {
-    this.textEntity = document.createElement('a-text');
-    this.textEntity.setAttribute('align', 'center');
-    this.textEntity.setAttribute('color', 'black');
-    this.textEntity.setAttribute('position', '0 0 0');
-    this.textEntity.setAttribute('scale', '0.5 0.5 0.5');
-    this.el.appendChild(this.textEntity);
+    let textEntity = document.createElement('a-text');
+    textEntity.setAttribute('align', 'center');
+    textEntity.setAttribute('color', 'black');
+    textEntity.setAttribute('position', '0 0 0');
+    textEntity.setAttribute('scale', '0.5 0.5 0.5');
+    this.el.appendChild(textEntity);
+    this.textEntity = textEntity;
 
-    this.fetchAndDisplay();
+    this.fetchTexts(this.data.chapterId)
+      .then(texts => {
+        this.texts = texts;
+        console.log('Fetched texts:', this.texts);
+        console.log('current text ID:', this.data.textId);
+        this.displayText(this.data.chapterId, 0);
+      })
+      .catch(error => {
+        console.error('Failed to fetch texts:', error);
+        this.texts = [];
+      });
 
-    // Add click event listener for the next text button
+    this.el.addEventListener('text-entity-created', () => {
+      console.log('Moving the text entity');
+      this.el.setAttribute('animation__move', {
+        property: 'position',
+        to: '0 2 -1.9',
+        dur: 2500, // Duration of the animation in milliseconds
+        easing: 'easeInOutSine', // Easing function for smooth animation
+      });
+      this.el.setAttribute('animation__rotation', {
+        property: 'rotation',
+        to: '0 0 0',
+        dur: 1000, // Duration of the rotation animation in milliseconds
+        easing: 'easeInOutSine', // Easing function for smooth animation
+      });
+    });
+
+    this.el.addEventListener('move-text-entity', () => {
+      console.log('Moving the text entity to the initial position');
+      this.el.setAttribute('animation__move', {
+        property: 'position',
+        to: '-1.5 1.5 -2',
+        dur: 1000, // Duration of the animation in milliseconds
+        easing: 'easeInOutSine', // Easing function for smooth animation
+      });
+      this.el.setAttribute('animation__rotation', {
+        property: 'rotation',
+        to: '0 15 0',
+        dur: 1000, // Duration of the rotation animation in milliseconds
+        easing: 'easeInOutSine', // Easing function for smooth animation
+      });
+      
+    });
+
+    this.el.emit('text-entity-created', null, false);
+    
+
+    // Button attributes and a click event listener
     const nextTextButton = document.getElementById(this.data.nextTextButtonID);
     if (nextTextButton) {
-      nextTextButton.setAttribute('position', '0 -0.5 0.02');
       nextTextButton.setAttribute('rotation', '0 0 0');
       nextTextButton.setAttribute('scale', '0.5 0.5 0.5');
 
-
       nextTextButton.addEventListener('click', () => {
-        this.data.textId += 1;  // Increment the textId to show the next text
-        console.log(this.data.textId);
-        this.fetchAndDisplay();
+        if (this.data.textId === this.texts.length - 1) {
+          this.el.emit('move-text-entity');
+        } else if (this.data.textId < this.texts.length-1) {
+            this.data.textId += 1;
+        }
+        console.log('current text ID:', this.data.textId);
+        console.log('texts:', this.texts[this.data.textId]);
+        this.displayText(this.data.chapterId, this.data.textId); 
       });
     }
-
-    // Add click event listener for the previous text button
+    
+    // Button attributes and a click event listener
     const previousTextButton = document.getElementById(this.data.previousTextButtonID);
     if (previousTextButton) {
+      previousTextButton.setAttribute('rotation', '0 0 0');
+      previousTextButton.setAttribute('scale', '0.5 0.5 0.5');
+
       previousTextButton.addEventListener('click', () => {
         if (this.data.textId > 0) {
-          this.data.textId -= 1;  // Decrement the textId to show the previous text
-          console.log(this.data.textId);
-          this.fetchAndDisplay();
-        } else {
-          console.error('No previous text to display');
+          this.data.textId -= 1; 
+        } else if (this.data.textId === 0) {
+            this.data.textId = 0;
         }
+          else {
+            console.error('No previous text to display');
+            this.data.textId = 0;
+        }
+        console.log('current text ID:', this.data.textId);
+        console.log('texts:', this.texts[this.data.textId]);
+        this.displayText(this.data.chapterId, this.data.textId);
       });
     }
+    
+    
   },
+  
+
+  fetchTexts: async function() {
+    try {
+      const response = await fetch(`http://localhost:3001/api/${this.data.chapterId}/texts`);
+      if (!response.ok) {
+        throw new Error('The response was not ok');
+      }
+      const fetchedTexts = await response.json();
+      // Convert the fetched texts object to an array
+      this.texts = Object.values(fetchedTexts);
+      return this.texts;
+    } catch (error) {
+      console.error('Failed to fetch texts:', error);
+      return null;
+    }
+  },
+  
+  displayText: async function(id) {
+    if (this.texts.lenght > 0) {
+      console.error('No texts available');
+      this.data.textId = 0;
+    }
+    else if (id < 0 || id >= this.texts.length) {
+      console.error('No text with such index');
+      this.data.textId = 0;
+    } else {
+      console.log('Number of text in this chapter: ', this.texts.length);
+      console.log(this.texts[id]);
+      this.textEntity.setAttribute('value', this.texts[this.data.textId]);
+    }
+  },
+  
+ 
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  /*
   // Fetch the JSON file
   fetchAndDisplay: function () {
     let data = this.data;
@@ -62,10 +167,6 @@ AFRAME.registerComponent('text-loader', {
       .catch(error => {
         console.error('Error fetching the text:', error);
       });
-  },
-  update: function (oldData) {
-    if (oldData.chapterId !== this.data.chapterId) {
-      this.fetchAndDisplay();
-    }
   }
+  */
 });
