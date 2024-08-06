@@ -74,7 +74,7 @@ class Stave{
 
     async getRandomInterval(){
         try {
-            const response = await fetch('/api/selectInterval/randomNotes');
+            const response = await fetch('http://localhost:3001/api/selectInterval/randomNotes');
             if (!response.ok) {
                 throw new Error('No notes loaded from the server.');
             } else {
@@ -89,9 +89,10 @@ class Stave{
                 this.removeNotes();
 
                 if (notes && notes.length > 0) {
+                    let index = 4
                     notes.forEach(note => {
                         // Finding the element on the stave where the note should be placed
-                        const parentObject = this.findElement(note.tone, 3);
+                        const parentObject = this.findElement(note.tone, index);
                         // Setting up the status of the element to occupied and allow the removeNotes function to remove the notes from the stave
                         if(parentObject.classList.contains('free')){
                             parentObject.classList.replace('free', 'occupied');
@@ -109,7 +110,8 @@ class Stave{
                         );
                         // Adding the note to the stave
                         this.notes.push(sceneEntity);
-                        parentObject.appendChild(sceneEntity.HTMLelement);                        
+                        parentObject.appendChild(sceneEntity.HTMLelement);
+                        index--;                       
                     });
                 // Play the tones of the interval
                 //this.playTones()

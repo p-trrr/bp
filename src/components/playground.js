@@ -130,7 +130,7 @@ AFRAME.registerComponent('playground', {
                                 // If not correct, change button color to red
                                 element.setAttribute('color', 'red');
                             }
-                            answerText.innerText = `${correctAnswers}/${totalQuestions}`;
+                            answerText.innerText = `${correctAnswers}'/'${totalQuestions}`;
                             // Play tones
                             stave.playTones();
                     

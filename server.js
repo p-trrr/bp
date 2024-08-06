@@ -13,6 +13,9 @@ app.get('/api', (req, res) => {
   res.send('API is working');
 });
 
+// Serve static files from the 'src/assets' directory
+app.use('/src/assets', express.static(path.join(__dirname, 'src', 'assets')));
+
 app.get('/api/chapter/:chapterId', (req, res) => {
   const chapterId = req.params.chapterId;
   const filePath = path.join(__dirname, 'src', 'chapters', `${chapterId}.json`);
@@ -44,37 +47,11 @@ app.get('/api/:chapterId/texts', (req, res) => {
       return;
     }
 
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.json(chapterTexts);
   });
 });
 
-app.get('/api/texts/:chapterId/:textId', (req, res) => {
-  const chapterId = req.params.chapterId;
-  const textId = req.params.textId;
-  const filePath = path.join(__dirname, 'src', 'assets', 'texts.json');
-
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-      res.status(500).json({'error': 'Error while loading the text'});
-      return;
-    }
-
-    const texts = JSON.parse(data);
-    const chapterTexts = texts[chapterId];
-
-    if (!chapterTexts) {
-      res.status(404).json({'error': 'Chapter not found'});
-      return;
-    }
-    const text = chapterTexts[textId];
-    if (!text) {
-      res.status(404).json({'error': 'Text not found'});
-      return;
-    }
-
-    res.json(text);
-  });
-});
 
 app.get('/api/selectInterval/randomNotes', (req, res) => {
   const randomNotes = [];
@@ -105,7 +82,7 @@ app.get('/api/selectInterval/randomNotes', (req, res) => {
   optionsIntervals.push(correctInterval);
   optionsIntervals.sort(() => Math.random() - 0.5); // Shuffle the array
 
-  res.json({notes: randomNotes, correctInterval: correctInterval, optionsIntervals: optionsIntervals});
+  res.json({notes: randomNotes, correctInterval: correctInterval, optionsIntervals: optionsIntervals, correctIntervalSize: intervalDistance});
 });
 
 

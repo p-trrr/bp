@@ -66,11 +66,11 @@
         "id": "text-plane",
         "height": 1,
         "width": 1.5,
-        "position": "-1.5 1.5 -2",
+        "position": "-2.5 1.8 -1.8",
         "rotation": "0 15 0",
         "scale": "1 1 0.5",
-        "color": "#40c965",
-        "control-buttons": "playButton: false; scale: 0.7 0.7 0.7; y: -0.3; previousButtonID: previous-text-button; nextButtonID: next-text-button",
+        "opacity": 0,
+        "control-buttons": "playButton: false; scale: 0.3 0.3 0.3; y: -0.3; previousButtonID: previous-text-button; nextButtonID: next-text-button",
         "text-loader": "chapterId: 1; textId: 0"
     }
 ]

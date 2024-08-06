@@ -1,3 +1,5 @@
+
+
 AFRAME.registerComponent('text-loader', {
   schema: {
     chapterId: { type: 'number', default: 1 },  // Chapter to display
@@ -11,6 +13,9 @@ AFRAME.registerComponent('text-loader', {
     textEntity.setAttribute('color', 'black');
     textEntity.setAttribute('position', '0 0 0');
     textEntity.setAttribute('scale', '0.5 0.5 0.5');
+    textEntity.setAttribute('font', '/assets/fonts/aframe-custom-msdf.json');
+    //textEntity.setAttribute('fontImage', '/assets/fonts/aframe-custom-msdf.png');
+    textEntity.setAttribute('negate', 'false');
     this.el.appendChild(textEntity);
     this.textEntity = textEntity;
 
@@ -46,13 +51,13 @@ AFRAME.registerComponent('text-loader', {
       console.log('Moving the text entity to the initial position');
       this.el.setAttribute('animation__move', {
         property: 'position',
-        to: '-1.5 1.5 -2',
+        to: '-2.5 1.8 -1.8',
         dur: 1000, // Duration of the animation in milliseconds
         easing: 'easeInOutSine', // Easing function for smooth animation
       });
       this.el.setAttribute('animation__rotation', {
         property: 'rotation',
-        to: '0 15 0',
+        to: '0 30 0',
         dur: 1000, // Duration of the rotation animation in milliseconds
         easing: 'easeInOutSine', // Easing function for smooth animation
       });
@@ -75,7 +80,6 @@ AFRAME.registerComponent('text-loader', {
             this.data.textId += 1;
         }
         console.log('current text ID:', this.data.textId);
-        console.log('texts:', this.texts[this.data.textId]);
         this.displayText(this.data.chapterId, this.data.textId); 
       });
     }
@@ -97,7 +101,6 @@ AFRAME.registerComponent('text-loader', {
             this.data.textId = 0;
         }
         console.log('current text ID:', this.data.textId);
-        console.log('texts:', this.texts[this.data.textId]);
         this.displayText(this.data.chapterId, this.data.textId);
       });
     }
@@ -131,8 +134,6 @@ AFRAME.registerComponent('text-loader', {
       console.error('No text with such index');
       this.data.textId = 0;
     } else {
-      console.log('Number of text in this chapter: ', this.texts.length);
-      console.log(this.texts[id]);
       this.textEntity.setAttribute('value', this.texts[this.data.textId]);
     }
   },

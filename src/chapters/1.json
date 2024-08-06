@@ -52,26 +52,12 @@
         "pointer": true
     },
     {
-        "tag": "a-circle",
-        "id": "play-button",
-        "position": "0 1 -2",
-        "radius": ".2",
-        "rotation": "-15 0 0",
-        "animation__mousedown": "property: components.material.material.color; type: color; to: yellow; startEvents: mousedown; dur: 050",
-        "animation__mouseup": "property: components.material.material.color; type: color; to: white; startEvents: mouseup; dur: 050",
-        "children": [
-            {
-                "tag": "a-triangle",
-                "position": ".03 0 .01",
-                "scale": "0.2 0.2 1",
-                "rotation": "0 0 -90",
-                "color": "black"
-            }
-        ]
-    },
-    {
         "tag": "a-entity",
-        "id": "switch-controls",
+        "id": "chapter-controls",
+        "position": "0 1 -2",
+        "rotation": "-15 0 0",
+        "scale": "1 1 1",
+        "control-buttons": "playButton: true",
         "switch-chapter": true
     },
     {

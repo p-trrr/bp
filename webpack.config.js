@@ -35,21 +35,29 @@ module.exports = {
     module: {
     rules: [
         {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-            loader: 'babel-loader',
-            options: {
-                presets: ['@babel/preset-env']
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    presets: ['@babel/preset-env']
+                }
             }
-        }
         },
+        
         {
-            test: /\.json$/,
-            type: 'asset/resource',
-            generator: {
-                filename: 'assets/[name][ext]'
-            }
+            test: /\.(png|jpe?g|gif|json)$/i,
+            use: [
+              {
+                loader: 'file-loader',
+                options: {
+                  name: '[path][name].[ext]',
+                  context: 'src/assets/fonts',
+                  outputPath: 'assets',
+                  publicPath: '/assets'
+                }
+              }
+            ]
         }
     ]
     }
