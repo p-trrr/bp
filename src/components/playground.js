@@ -1,12 +1,13 @@
 const Stave = require('../classes/Stave.js');
 const Note = require('../classes/Note.js');
 
+let stave = new Stave();
+
 AFRAME.registerComponent('playground', {
-    init: function () {        
-        const stave = new Stave();
+    init: function () {   
+        
         this.stave = stave;
         const chapter = document.querySelector('#chapter');
-
         const el = this.el;
 
         el.addEventListener('play-button-created', async () => {
@@ -160,3 +161,4 @@ AFRAME.registerComponent('playground', {
     }
     
 });
+module.exports = stave;

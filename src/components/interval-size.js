@@ -1,70 +1,176 @@
+//const myEmitter = require('./classes/eventEmitter');
+
+const myEmitter = require("../classes/eventEmitter");
+const stave = require("./playground");
+
 AFRAME.registerComponent('interval-size', {
     schema: {
-        // Define your component's schema properties here
-        // For example:
-        // width: { type: 'number', default: 1 },
-        // height: { type: 'number', default: 1 },
+        maxRuns: { type: 'number', default: 5 },
+        currentRun: { type: 'number', default: 0 }
     },
 
     init: function () {
-        // Initialization code goes here
-        // This function is called when the component is attached to an entity
-        const sceneEl = document.querySelector('a-scene');
-        const intervalSizeEl = document.createElement('a-entity');
-        intervalSizeEl.setAttribute('position', '0 1 -5');
-        sceneEl.appendChild(intervalSizeEl);
+        const maxRuns = 5;
+        let runCount = 0;
 
-        const boxSize = 1;
-        const spacing = 0.5;
-        const rows = 2;
-        const columns = 4;
 
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < columns; j++) {
-                const boxEl = document.createElement('a-box');
-                const x = (j - (columns - 1) / 2) * (boxSize + spacing);
-                const y = (i - (rows - 1) / 2) * (boxSize + spacing);
-                boxEl.setAttribute('position', `${x} ${y} 0`);
-                boxEl.setAttribute('width', boxSize);
-                boxEl.setAttribute('height', boxSize);
-                boxEl.setAttribute('depth', boxSize);
-                boxEl.setAttribute('text', `value: ${i * columns + j + 1}`);
-                intervalSizeEl.appendChild(boxEl);
+        myEmitter.on('show-interval-size-options', () => {
+            const boxSize = 0.15;
+            const spacing = 0.1;
+            const rows = 4;
+            const columns = 2;
+
+            stave.getRandomInterval()
+            .then(data => {
+                for (let i = 0; i < rows; i++) {
+                    for (let j = 0; j < columns; j++) {
+                        const x = (j - (rows - 1) / 2) * (boxSize + spacing);
+                        const y = (i - (columns - 1) / 2) * (boxSize + spacing);
+                        const textValue = i * columns + j + 1;
+                        
+                        const boxEl = boxElement(boxSize, textValue);
+                        boxEl.setAttribute('position', `${x} ${y} 0`);
+                        this.el.appendChild(boxEl);
+    
+                        boxEl.addEventListener('click', () => {
+                            boxClick(boxEl, textValue, data.correctIntervalSize);
+                            
+                        });
+                    }
+                    console.log('Interval size options boxes created');
+                    console.log(data.correctIntervalSize);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching interval data:', error);
+            });
+            
+
+            
+        });
+
+        function initializeBoxes() {
+            stave.getRandomInterval()
+                .then(data => {
+                    for (let i = 0; i < rows; i++) {
+                        for (let j = 0; j < columns; j++) {
+                            const x = (j - (rows - 1) / 2) * (boxSize + spacing);
+                            const y = (i - (columns - 1) / 2) * (boxSize + spacing);
+                            const textValue = i * columns + j + 1;
+        
+                            const boxEl = boxElement(boxSize, textValue);
+                            boxEl.setAttribute('position', `${x} ${y} 0`);
+                            this.el.appendChild(boxEl);
+        
+                            boxEl.addEventListener('click', () => {
+                                boxClick(boxEl, textValue, data.correctIntervalSize);
+                                runCount++;
+                                if (runCount < maxRuns) {
+                                    initializeBoxes(); // Fetch new data and initialize boxes again
+                                }
+                            });
+                        }
+                    }
+                    console.log('Interval size options boxes created');
+                    console.log(data.correctIntervalSize);
+                })
+                .catch(error => {
+                    console.error('Error fetching interval data:', error);
+                });
+            return 
+        }
+
+        function boxElement(size, textValue){
+            const boxEl = document.createElement('a-box');
+            boxEl.setAttribute('width', size);
+            boxEl.setAttribute('height', size);
+            boxEl.setAttribute('depth', size);
+
+            const textEl = document.createElement('a-text');
+            textEl.setAttribute('value', textValue);
+            textEl.setAttribute('align', 'center');
+            textEl.setAttribute('position', '0 0 0.08'); 
+            textEl.setAttribute('scale', '0.4 0.4 0.4'); 
+            boxEl.appendChild(textEl);
+            
+            return boxEl;
+        }
+        
+        function correctAnswer(boxEl){
+            console.log('Correct!');
+            boxEl.setAttribute('animation__correct', {
+                property: 'scale',
+                to: '1.2 1.2 1.2',
+                dur: 500,
+                easing: 'easeOutElastic',
+                elasticity: 400,
+                dir: 'alternate',
+                loop: 1
+            });
+            boxEl.setAttribute('animation__correct-color', {
+                property: 'color',
+                to: 'green',
+                dur: 1000,
+                dir: 'alternate',
+                loop: 1
+            });
+        }
+
+        function wrongAnswer(boxEl){
+            console.log('Wrong!');
+            boxEl.setAttribute('animation__wrong-color', {
+                property: 'color',
+                to: 'red',
+                dur: 1000
+            });
+        }
+        
+        function boxClick(boxEl, textValue, data){
+            console.log('Clicked on the box with value:', textValue);            
+            console.log("Correct interval size: " + data);
+            if(textValue === data){
+                correctAnswer(boxEl);
+                setTimeout(() => {
+                }, 1000);
+            } else {
+                wrongAnswer(boxEl);
+                setTimeout(() => {
+                }, 1000);
             }
         }
-        fetch('http://localhost:3001/api/selectInterval/randomNotes')
-            .then(response => response.json())
+
+    
+/*
+    getRandomInterval()
             .then(data => {
-                const correctIntervalSize = data.correctIntervalSize;
-                const staveEl = document.querySelector('#stave');
-                staveEl.setAttribute('position', '0 0 -5');
-                sceneEl.appendChild(staveEl);
-
-                const note1 = document.createElement('a-entity');
-                note1.setAttribute('position', '-1 0 0');
-                note1.setAttribute('text', `value: ${data.note1}`);
-                staveEl.appendChild(note1);
-
-                const note2 = document.createElement('a-entity');
-                note2.setAttribute('position', '1 0 0');
-                note2.setAttribute('text', `value: ${data.note2}`);
-                staveEl.appendChild(note2);
+                if (data) {
+                    console.log(data);
+                    const correctIntervalSize = data.correctInterval;
+                    
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
             });
+            */
     },
-
-    update: function () {
-        // Update code goes here
-        // This function is called whenever the component's properties are updated
-    },
-
-    tick: function (time, deltaTime) {
-        // Tick code goes here
-        // This function is called on every frame update
+/*
+    getRandomInterval: async function () {
+        try {
+            const response = await fetch('http://localhost:3001/api/selectInterval/randomNotes');
+            if (!response.ok) {
+                throw new Error('No notes loaded from the server.');
+            } else {
+                const data = await response.json();
+                console.log(data);
+                return data;
+            }
+        } catch (error) {
+            console.error('Failed to fetch data:', error);
+            return null;
+        }
     },
 
     // Add more component methods as needed
-
+*/
 });

@@ -72,5 +72,12 @@
         "opacity": 0,
         "control-buttons": "playButton: false; scale: 0.3 0.3 0.3; y: -0.3; previousButtonID: previous-text-button; nextButtonID: next-text-button",
         "text-loader": "chapterId: 1; textId: 0"
+    },
+    {
+        "tag": "a-entity",
+        "interval-size": true,
+        "id": "interval-size",
+        "position": "1.3 1.6 -1.6",
+        "rotation": "0 -32 0"
     }
 ]

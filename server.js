@@ -93,7 +93,7 @@ const notes = [
   { id: 4, tone: 'F4', frequency: 349.23, index: 1, HTMLelement: null},
   { id: 5, tone: 'G4', frequency: 391.99, index: 1, HTMLelement: null},
   { id: 6, tone: 'A4', frequency: 440.00, index: 1, HTMLelement: null},
-  { id: 7, tone: 'H4', frequency: 493.88, index: 1, HTMLelement: null},
+  { id: 7, tone: 'B4', frequency: 493.88, index: 1, HTMLelement: null},
   { id: 8, tone: 'C5', frequency: 523.25, index: 1, HTMLelement: null},
   { id: 9, tone: 'D5', frequency: 587.33, index: 1, HTMLelement: null},
   { id: 10,tone: 'E5', frequency: 659.25, index: 1, HTMLelement: null},

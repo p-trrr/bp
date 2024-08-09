@@ -1,4 +1,4 @@
-
+const myEmitter = require("../classes/eventEmitter");
 
 AFRAME.registerComponent('text-loader', {
   schema: {
@@ -36,13 +36,13 @@ AFRAME.registerComponent('text-loader', {
       this.el.setAttribute('animation__move', {
         property: 'position',
         to: '0 2 -1.9',
-        dur: 2500, // Duration of the animation in milliseconds
+        dur: 1200, // Duration of the animation in milliseconds
         easing: 'easeInOutSine', // Easing function for smooth animation
       });
       this.el.setAttribute('animation__rotation', {
         property: 'rotation',
         to: '0 0 0',
-        dur: 1000, // Duration of the rotation animation in milliseconds
+        dur: 1200, // Duration of the rotation animation in milliseconds
         easing: 'easeInOutSine', // Easing function for smooth animation
       });
     });
@@ -52,19 +52,19 @@ AFRAME.registerComponent('text-loader', {
       this.el.setAttribute('animation__move', {
         property: 'position',
         to: '-2.5 1.8 -1.8',
-        dur: 1000, // Duration of the animation in milliseconds
+        dur: 1200, // Duration of the animation in milliseconds
         easing: 'easeInOutSine', // Easing function for smooth animation
       });
       this.el.setAttribute('animation__rotation', {
         property: 'rotation',
-        to: '0 30 0',
-        dur: 1000, // Duration of the rotation animation in milliseconds
+        to: '0 45 0',
+        dur: 1200, // Duration of the rotation animation in milliseconds
         easing: 'easeInOutSine', // Easing function for smooth animation
       });
       
     });
 
-    this.el.emit('text-entity-created', null, false);
+    this.el.emit('text-entity-created');
     
 
     // Button attributes and a click event listener
@@ -76,6 +76,8 @@ AFRAME.registerComponent('text-loader', {
       nextTextButton.addEventListener('click', () => {
         if (this.data.textId === this.texts.length - 1) {
           this.el.emit('move-text-entity');
+          myEmitter.emit('show-interval-size-options');
+          //document.querySelector('#chapter').emit('show-interval-size-options');
         } else if (this.data.textId < this.texts.length-1) {
             this.data.textId += 1;
         }
@@ -126,7 +128,7 @@ AFRAME.registerComponent('text-loader', {
   },
   
   displayText: async function(id) {
-    if (this.texts.lenght > 0) {
+    if (this.texts.length === 0) {
       console.error('No texts available');
       this.data.textId = 0;
     }
@@ -137,37 +139,62 @@ AFRAME.registerComponent('text-loader', {
       this.textEntity.setAttribute('value', this.texts[this.data.textId]);
     }
   },
-  
- 
-
-
-  
-  
-  
-  
-  
-  
-  
-  
   /*
-  // Fetch the JSON file
-  fetchAndDisplay: function () {
-    let data = this.data;
-    fetch(`http://localhost:3001/api/texts/${data.chapterId}/${data.textId}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.text(); // Use .text() instead of .json() if the response is a string
-      })
-      .then(textContent => {
-        console.log(data.chapterId, ', ', data.textId, ', text content:', textContent);
-        // Update the value of the text entity to show the actual text in the scene
-        this.textEntity.setAttribute('value', textContent);
-      })
-      .catch(error => {
-        console.error('Error fetching the text:', error);
+  remove: function() {
+    this.el.removeEventListener('text-entity-created', () => {
+      console.log('Moving the text entity');
+      this.el.setAttribute('animation__move', {
+        property: 'position',
+        to: '0 2 -1.9',
+        dur: 1500, // Duration of the animation in milliseconds
+        easing: 'easeInOutSine', // Easing function for smooth animation
       });
+      this.el.setAttribute('animation__rotation', {
+        property: 'rotation',
+        to: '0 0 0',
+        dur: 1500, // Duration of the rotation animation in milliseconds
+        easing: 'easeInOutSine', // Easing function for smooth animation
+      });
+    });
+    this.el.removeEventListener('move-text-entity', () => {
+      console.log('Moving the text entity to the initial position');
+      this.el.setAttribute('animation__move', {
+        property: 'position',
+        to: '-2.5 1.8 -1.8',
+        dur: 1500, // Duration of the animation in milliseconds
+        easing: 'easeInOutSine', // Easing function for smooth animation
+      });
+      this.el.setAttribute('animation__rotation', {
+        property: 'rotation',
+        to: '0 45 0',
+        dur: 1500, // Duration of the rotation animation in milliseconds
+        easing: 'easeInOutSine', // Easing function for smooth animation
+      });
+    });
+    this.el.removeEventListener('click', () => {
+      if (this.data.textId === this.texts.length - 1) {
+        this.el.emit('move-text-entity');
+        myEmitter.emit('show-interval-size-options');
+        //document.querySelector('#chapter').emit('show-interval-size-options');
+      } else if (this.data.textId < this.texts.length-1) {
+          this.data.textId += 1;
+      }
+      console.log('current text ID:', this.data.textId);
+      this.displayText(this.data.chapterId, this.data.textId); 
+    });
+    this.el.removeEventListener('click', () => {
+      if (this.data.textId > 0) {
+        this.data.textId -= 1; 
+      } else if (this.data.textId === 0) {
+          this.data.textId = 0;
+      }
+        else {
+          console.error('No previous text to display');
+          this.data.textId = 0;
+      }
+      console.log('current text ID:', this.data.textId);
+      this.displayText(this.data.chapterId, this.data.textId);
+    });
   }
-  */
+    */
 });

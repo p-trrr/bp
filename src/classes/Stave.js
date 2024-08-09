@@ -6,7 +6,7 @@ class Stave{
         this.maxIndex = 8;
         this.notes = [];
         this.rows = 12;
-        this.HTMLelement = document.querySelector('#stave');
+        this.HTMLelement = null;
         this.currentMaxId = 0;
         
     }
@@ -15,7 +15,7 @@ class Stave{
         if(!this.HTMLelement){
             this.HTMLelement = document.createElement('a-entity');
             this.HTMLelement.setAttribute('id', 'stave');
-        }
+        }                 
         this.HTMLelement.classList.add('raycastable')
         this.HTMLelement.setAttribute('playground', '');
         document.querySelector('#chapter').appendChild(this.HTMLelement);
@@ -62,8 +62,11 @@ class Stave{
     removeNotes() {
         this.notes.forEach(note => {
             if(note.HTMLelement && note.HTMLelement.parentNode){
-                note.HTMLelement.parentNode.classList.replace('occupied', 'free');
-                //note.HTMLelement.parentNode.remove(note.HTMLelement);
+                if(note.HTMLelement.parentNode.classList.contains('occupied')){
+                    note.HTMLelement.parentNode.classList.replace('occupied', 'free');
+                } else { 
+                    note.HTMLelement.parentNode.classList.add('free');
+                }
                 note.HTMLelement.remove();
             }
         });
@@ -85,6 +88,7 @@ class Stave{
                 const notes = data.notes;
                 const interval = data.correctInterval;
                 const options = data.optionsIntervals;
+                const correctIntervalSize = data.correctIntervalSize;
 
                 this.removeNotes();
 
@@ -94,29 +98,59 @@ class Stave{
                         // Finding the element on the stave where the note should be placed
                         const parentObject = this.findElement(note.tone, index);
                         // Setting up the status of the element to occupied and allow the removeNotes function to remove the notes from the stave
-                        if(parentObject.classList.contains('free')){
-                            parentObject.classList.replace('free', 'occupied');
-                        } else {
+                        if (parentObject) {
+                            // Setting up the status of the element to occupied and allow the removeNotes function to remove the notes from the stave
+                            if (!parentObject.classList.length === 0) {
                                 parentObject.classList.add('occupied');
-                        }
-                        parentObject.classList.add('occupied');
+                            } else if (parentObject.classList.contains('free')) {
+                                parentObject.classList.replace('free', 'occupied');
+                            } else {
+                                parentObject.classList.add('occupied');
+                            }
+                            parentObject.classList.add('occupied');
+    
+                            // Creating the note entity
+                            const noteEntity = new Note(
+                                note.id,
+                                note.tone,
+                                note.index,
+                                note.frequency
+                            );
+                            // Adding the note to the stave
+                            this.addNote(noteEntity);
+                            parentObject.appendChild(noteEntity.HTMLelement);
+                            index--;
+                        } else {
+                            console.error(`Element not found for tone: ${note.tone} and index: ${index}`);
+                            const position = this.positionNoteOnStave(note);
 
-                        // Creating the note entity
-                        const sceneEntity = new Note(
-                            note.id,
-                            note.tone,
-                            note.index,
-                            note.frequency
-                        );
-                        // Adding the note to the stave
-                        this.notes.push(sceneEntity);
-                        parentObject.appendChild(sceneEntity.HTMLelement);
-                        index--;                       
+                            const parentObject = document.createElement('a-plane');
+                            parentObject.setAttribute('position', position);
+                            parentObject.setAttribute('width', '0.625');
+                            parentObject.setAttribute('height', '0.2');
+                            parentObject.setAttribute('rotation', '0 0 0');
+                            parentObject.setAttribute('material', 'opacity: 0; transparent: true');
+                            parentObject.setAttribute('visible', 'true');
+                            
+                            parentObject.classList.add(note.tone, 'free');
+                            parentObject.setAttribute('index', note.index);
+                            parentObject.setAttribute('frequency', note.frequency);
+
+                            document.querySelector('#stave').appendChild(parentObject);
+                            const noteEntity = new Note(
+                                note.id,
+                                note.tone,
+                                note.index,
+                                note.frequency
+                            );
+                            addNote(noteEntity);
+                            parentObject.appendChild(noteEntity.HTMLelement);
+                            index--;
+
+                        }
                     });
-                // Play the tones of the interval
-                //this.playTones()
-                console.log(interval);
-                return data;
+                    console.log(interval);
+                    return data;
                 }
             } 
         } catch (error) {
