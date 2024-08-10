@@ -76,6 +76,14 @@ AFRAME.registerComponent('text-loader', {
       nextTextButton.addEventListener('click', () => {
         if (this.data.textId === this.texts.length - 1) {
           this.el.emit('move-text-entity');
+          
+          const intervalSizeOptions = document.createElement('a-entity')
+          intervalSizeOptions.setAttribute('id', 'interval-size-options');
+          intervalSizeOptions.setAttribute('interval-size', '');
+          intervalSizeOptions.setAttribute('position', '1.3 1.6 -1.6');
+          intervalSizeOptions.setAttribute('rotation', '0 -32 0');
+          document.querySelector('#chapter').appendChild(intervalSizeOptions);
+
           myEmitter.emit('show-interval-size-options');
           //document.querySelector('#chapter').emit('show-interval-size-options');
         } else if (this.data.textId < this.texts.length-1) {
