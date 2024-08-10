@@ -1,5 +1,3 @@
-//const myEmitter = require('./classes/eventEmitter');
-
 const myEmitter = require("../classes/eventEmitter");
 const stave = require("./playground");
 
@@ -13,74 +11,93 @@ AFRAME.registerComponent('interval-size', {
         const maxRuns = 5;
         let runCount = 0;
 
-
         myEmitter.on('show-interval-size-options', () => {
+            initializeBoxes(this.el);
+        });
+
+        function initializeBoxes(parentEl){
             const boxSize = 0.15;
             const spacing = 0.1;
             const rows = 4;
             const columns = 2;
 
-            stave.getRandomInterval()
-            .then(data => {
+            
+            stave.getRandomInterval().then(data => {
                 for (let i = 0; i < rows; i++) {
                     for (let j = 0; j < columns; j++) {
                         const x = (j - (rows - 1) / 2) * (boxSize + spacing);
                         const y = (i - (columns - 1) / 2) * (boxSize + spacing);
                         const textValue = i * columns + j + 1;
                         
-                        const boxEl = boxElement(boxSize, textValue);
+                        const boxEl = initializeBox(boxSize, textValue);
                         boxEl.setAttribute('position', `${x} ${y} 0`);
-                        this.el.appendChild(boxEl);
-    
+                        parentEl.appendChild(boxEl);
+
                         boxEl.addEventListener('click', () => {
-                            boxClick(boxEl, textValue, data.correctIntervalSize);
-                            
+                            selectedOption(boxEl, textValue, data.correctIntervalSize);
+                            clearBoxes(parentEl);
+                            initializeBoxes(parentEl);
                         });
-                    }
-                    console.log('Interval size options boxes created');
-                    console.log(data.correctIntervalSize);
+                    }                    
                 }
-            })
-            .catch(error => {
+                const box0 = initializeBox(boxSize, 0);
+                box0.setAttribute('position', '0 0 0');
+                box0.addEventListener('click', () => {
+                    selectedOption(box0, 0, data.correctIntervalSize);
+                    clearBoxes(parentEl);
+                    initializeBoxes(parentEl);
+                });
+
+                console.log('Interval size options boxes created');
+                console.log(data.correctIntervalSize);
+            }).catch(error => {
                 console.error('Error fetching interval data:', error);
             });
-            
-
-            
-        });
-
-        function initializeBoxes() {
-            stave.getRandomInterval()
-                .then(data => {
-                    for (let i = 0; i < rows; i++) {
-                        for (let j = 0; j < columns; j++) {
-                            const x = (j - (rows - 1) / 2) * (boxSize + spacing);
-                            const y = (i - (columns - 1) / 2) * (boxSize + spacing);
-                            const textValue = i * columns + j + 1;
-        
-                            const boxEl = boxElement(boxSize, textValue);
-                            boxEl.setAttribute('position', `${x} ${y} 0`);
-                            this.el.appendChild(boxEl);
-        
-                            boxEl.addEventListener('click', () => {
-                                boxClick(boxEl, textValue, data.correctIntervalSize);
-                                runCount++;
-                                if (runCount < maxRuns) {
-                                    initializeBoxes(); // Fetch new data and initialize boxes again
-                                }
-                            });
-                        }
-                    }
-                    console.log('Interval size options boxes created');
-                    console.log(data.correctIntervalSize);
-                })
-                .catch(error => {
-                    console.error('Error fetching interval data:', error);
-                });
-            return 
         }
 
-        function boxElement(size, textValue){
+
+        function clearBoxes(parentEl){
+            while (parentEl.firstChild) {
+                parentEl.removeChild(parentEl.firstChild);
+            }
+        }
+
+        function selectedOption(boxEl, textValue, data){
+            console.log('Clicked on the box with value:', textValue);            
+            console.log("Correct interval size: " + data);
+            if(textValue === data){
+                correctAnswer(boxEl);
+                setTimeout(() => {
+                }, 1000);
+            } else {
+                wrongAnswer(boxEl);
+                setTimeout(() => {
+                }, 1000);
+            }
+        }
+
+        function boxClick(boxEl, textValue, runCount){
+            stave.getRandomInterval()
+                .then(data => {
+                    boxClick(boxEl, textValue, data.correctIntervalSize);
+                    runCount++;
+                    if (runCount < maxRuns) {
+                        boxEl.addEventListener('click', () => {
+                            selectedOption(boxEl, textValue, data.correctIntervalSize);
+                        });
+                        boxClick(boxEl, textValue, runCount);
+                    }
+                    else {
+                        console.log('Max runs reached');
+                        myEmitter.emit('results');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching interval data: ', error);
+                });
+        }
+
+        function initializeBox(size, textValue){
             const boxEl = document.createElement('a-box');
             boxEl.setAttribute('width', size);
             boxEl.setAttribute('height', size);
@@ -125,21 +142,9 @@ AFRAME.registerComponent('interval-size', {
             });
         }
         
-        function boxClick(boxEl, textValue, data){
-            console.log('Clicked on the box with value:', textValue);            
-            console.log("Correct interval size: " + data);
-            if(textValue === data){
-                correctAnswer(boxEl);
-                setTimeout(() => {
-                }, 1000);
-            } else {
-                wrongAnswer(boxEl);
-                setTimeout(() => {
-                }, 1000);
-            }
-        }
 
-    
+    }
+
 /*
     getRandomInterval()
             .then(data => {
@@ -153,7 +158,7 @@ AFRAME.registerComponent('interval-size', {
                 console.error('Error:', error);
             });
             */
-    },
+    
 /*
     getRandomInterval: async function () {
         try {
