@@ -4,6 +4,9 @@ const Note = require('../classes/Note.js');
 let stave = new Stave();
 
 AFRAME.registerComponent('playground', {
+    schema: {
+        attachingNotes: {type: 'boolean', default: true}
+    },
     init: function () {   
         
         this.stave = stave;
@@ -37,6 +40,8 @@ AFRAME.registerComponent('playground', {
 
         stave.generateStave();     
         
+        if(this.data.attachingNotes === true){
+            
         el.addEventListener('click', async function(e) {
             await Tone.start(); // Tone.js is started before proceeding
             console.log("audio is ready");
@@ -80,6 +85,7 @@ AFRAME.registerComponent('playground', {
                 }                       
             }
         });
+    }
         //this.el.addEventListener('click', this.noteAttachment);
 
         if(emptyTheStaveButton){

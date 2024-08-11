@@ -21,7 +21,6 @@ function appendEntities(entities, parentEl) {
   });
 }
 
-
 AFRAME.registerComponent('load-chapter', {
   schema: {
     chapterId: {type: 'number', default: 0}
