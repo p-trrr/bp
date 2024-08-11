@@ -1,7 +1,12 @@
 AFRAME.registerComponent('switch-chapter', {
+  schema
+: {
+    previousButtonID: {type: 'string', default: 'previous-button'},
+    nextButtonID: {type: 'string', default: 'next-button'}
+  },
   init: function() {
-    const previousButton = document.querySelector('#previous-button');
-    const nextButton = document.querySelector('#next-button');
+    const previousButton = document.querySelector(`#${this.data.previousButtonID}`);
+    const nextButton = document.querySelector(`#${this.data.nextButtonID}`);
 
     if (!previousButton || !nextButton) {
       console.error('Switch buttons are not available in the DOM');

@@ -16,7 +16,7 @@ class Stave{
             this.HTMLelement = document.createElement('a-entity');
             this.HTMLelement.setAttribute('id', 'stave');
         }                 
-        this.HTMLelement.classList.add('raycastable')
+        this.HTMLelement.classList.add('raycastable');
         this.HTMLelement.setAttribute('playground', '');
         document.querySelector('#chapter').appendChild(this.HTMLelement);
     
@@ -183,7 +183,7 @@ class Stave{
                     note.playTone();
                     setTimeout(() => {
                         note.HTMLelement.setAttribute('color', 'red');
-                    }, 1000); // Adjust this delay to match the tone's duration
+                    }, 1000);                
                 });
             }, delay * groupIndex); // Multiply delay by the groupIndex to stagger the start times of chords
         });
@@ -212,6 +212,7 @@ class Stave{
         // Return the first match, or null if none found
         return filtered.length > 0 ? filtered[0] : null;
     }
+
 }
 
 module.exports = Stave;
