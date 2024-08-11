@@ -41,51 +41,51 @@ AFRAME.registerComponent('playground', {
         stave.generateStave();     
         
         if(this.data.attachingNotes === true){
-            
-        el.addEventListener('click', async function(e) {
-            await Tone.start(); // Tone.js is started before proceeding
-            console.log("audio is ready");
 
-            let intersectedObject = e.detail.intersection.object;
-        
-            if(intersectedObject.el.classList.contains('free')){
-                let note = new Note(
-                    stave.currentMaxId,
-                    intersectedObject.el.getAttribute('class').split(' ')[0], // Adjusted to get the first class
-                    intersectedObject.el.getAttribute('index'), 
-                    intersectedObject.el.getAttribute('frequency')
-                );
-        
-                intersectedObject.el.classList.replace('free', 'occupied');
-                intersectedObject.el.appendChild(note.HTMLelement);
-                stave.addNote(note);
-                note.playTone();
-        
-                console.log(note.tone + ' ' + note.frequency);
-                console.log(stave.notes);
-            } else {
-                if(intersectedObject.el.firstChild){
-                    let id = intersectedObject.el.firstChild.getAttribute('id');
-                    intersectedObject.el.removeChild(intersectedObject.el.firstChild);
-                    stave.removeNote(stave.notes[id]);
-        
+            el.addEventListener('click', async function(e) {
+                await Tone.start(); // Tone.js is started before proceeding
+                console.log("audio is ready");
+
+                let intersectedObject = e.detail.intersection.object;
+            
+                if(intersectedObject.el.classList.contains('free')){
+                    let note = new Note(
+                        stave.currentMaxId,
+                        intersectedObject.el.getAttribute('class').split(' ')[0], // Adjusted to get the first class
+                        intersectedObject.el.getAttribute('index'), 
+                        intersectedObject.el.getAttribute('frequency')
+                    );
+            
+                    intersectedObject.el.classList.replace('free', 'occupied');
+                    intersectedObject.el.appendChild(note.HTMLelement);
+                    stave.addNote(note);
+                    note.playTone();
+            
+                    console.log(note.tone + ' ' + note.frequency);
                     console.log(stave.notes);
-                    if(intersectedObject.el.classList.contains('occupied')){
-                        intersectedObject.el.classList.replace('occupied', 'free');
-                    }
                 } else {
-                    let id = intersectedObject.el.getAttribute('id');
-                    intersectedObject.el.remove();
-                    stave.removeNote(stave.notes[id]);
-        
-                    console.log(stave.notes);
-                    if(intersectedObject.el.classList.contains('occupied')){
-                        intersectedObject.el.classList.replace('occupied', 'free');
-                    }
-                }                       
-            }
-        });
-    }
+                    if(intersectedObject.el.firstChild){
+                        let id = intersectedObject.el.firstChild.getAttribute('id');
+                        intersectedObject.el.removeChild(intersectedObject.el.firstChild);
+                        stave.removeNote(stave.notes[id]);
+            
+                        console.log(stave.notes);
+                        if(intersectedObject.el.classList.contains('occupied')){
+                            intersectedObject.el.classList.replace('occupied', 'free');
+                        }
+                    } else {
+                        let id = intersectedObject.el.getAttribute('id');
+                        intersectedObject.el.remove();
+                        stave.removeNote(stave.notes[id]);
+            
+                        console.log(stave.notes);
+                        if(intersectedObject.el.classList.contains('occupied')){
+                            intersectedObject.el.classList.replace('occupied', 'free');
+                        }
+                    }                       
+                }
+            });
+        }
         //this.el.addEventListener('click', this.noteAttachment);
 
         if(emptyTheStaveButton){

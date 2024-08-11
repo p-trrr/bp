@@ -59,7 +59,7 @@
     {
         "tag": "a-entity",
         "id": "stave",
-        "playground": "attachingNotes: true"
+        "playground": true
     },
     {
         "tag": "a-plane",
