@@ -2,9 +2,9 @@ const { start } = require("tone");
 const myEmitter = require("../classes/eventEmitter");
 const stave = require("./playground");
 
-AFRAME.registerComponent('interval-size', {    
+AFRAME.registerComponent('interval-name', {
     init: async function () {
-        const correctAnswersGoal = 1;
+        const correctAnswersGoal = 3;
         let runCount = 0;
         let intervalData = await getNewInterval();
         const chapterEl = document.querySelector('#chapter');
@@ -12,38 +12,41 @@ AFRAME.registerComponent('interval-size', {
 
         let wrongAnswers = 0;
         let correctAnswers = 0;
+        const intervals = ['prima', 'sekunda', 'tercie', 'kvarta', 'kvinta', 'sexta', 'septima', 'oktava'];
 
         initializeBoxes(this.el);
-        console.log('Interval size component initialized');
+        console.log('Interval-name component initialized');
 
         function initializeBoxes(parentEl){
             const boxSize = 0.15;
-            const spacing = 0.1;
+            const spacing = 0.15;
             const rows = 4;
             const columns = 2;
                         
             let i; let j;
             for (i = 0; i < rows; i++) {
                 for (j = 0; j < columns; j++) {
-                    const x = (j - (rows - 1) / 2) * (boxSize + spacing);
+                    const x = (j - (rows - 1) / 2) * (boxSize*2 + spacing) + 0.2 ;
                     const y = (i - (columns - 1) / 2) * (boxSize + spacing);
-                    const textValue = i * columns + j + 1;
+                    const textValue = intervals[i * columns + j];
                     
                     const boxEl = initializeBox(boxSize, boxSize, textValue);
+                    boxEl.setAttribute('width', boxSize * 2);
                     boxEl.setAttribute('position', `${x} ${y} 0`);
                     parentEl.appendChild(boxEl);
                     boxEl.addEventListener('click', () => {
-                        evaluate(boxEl, textValue, intervalData.correctIntervalSize);
+                        evaluate(boxEl, textValue, intervalData.correctInterval);
                         runCount++;
                     });                   
                 }
             }                
-            const box0 = initializeBox(boxSize, boxSize, '0');
-            box0.setAttribute('position', '-.25 -.35 0');
+            const box0 = initializeBox(boxSize, boxSize, 'unisono');
+            box0.setAttribute('width', boxSize * 2);
+            box0.setAttribute('position', '-.25 -.40 0');
             box0.setAttribute('rotation', '-10 0 0');   
             box0.addEventListener('click', () => {
                 runCount++;
-                evaluate(box0, 0, intervalData.correctIntervalSize);
+                evaluate(box0, 0, intervalData.correctInterval);
             });
             parentEl.appendChild(box0);
             console.log('Interval size options boxes created');
@@ -78,7 +81,6 @@ AFRAME.registerComponent('interval-size', {
                     elasticity: 500,
                 })                
                 chapterEl.appendChild(notification);
-                chapterEl.emit('congrats-results');
                 
                 // Repeat and next chapter buttons
                 setTimeout(() => {
@@ -87,7 +89,7 @@ AFRAME.registerComponent('interval-size', {
                     repeatButton.setAttribute('width', '0.6');
                     repeatButton.addEventListener('click', function () {
                         
-                    chapterEl.setAttribute('load-chapter', 'chapterId', chapterEl.getAttribute('load-chapter').chapterId);
+                       console.log('Repeat button clicked');
                     }); 
                     repeatButton.setAttribute('animation__arrive', {
                         property: 'position',

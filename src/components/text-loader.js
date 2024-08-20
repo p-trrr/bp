@@ -5,7 +5,8 @@ AFRAME.registerComponent('text-loader', {
     chapterId: { type: 'number', default: 1 },  // Chapter to display
     textId: { type: 'number', default: 0 },  // Text index to display
     nextTextButtonID: { type: 'string', default: 'next-text-button' },
-    previousTextButtonID: { type: 'string', default: 'previous-text-button' }
+    previousTextButtonID: { type: 'string', default: 'previous-text-button' },
+    followingTheText: { type: 'string', default: 'interval-size' }
   },
   init: function () {
     let textEntity = document.createElement('a-text');
@@ -76,7 +77,15 @@ AFRAME.registerComponent('text-loader', {
       nextTextButton.addEventListener('click', () => {
         if (this.data.textId === this.texts.length - 1) {
           this.el.emit('move-text-entity');
-          
+
+          // Load the next enetites for what comes after the text
+          const followingTheText = document.createElement('a-entity');
+          followingTheText.setAttribute('id', this.data.followingTheText);
+          followingTheText.setAttribute(this.data.followingTheText, '');
+          followingTheText.setAttribute('position', '1.3 1.6 -1.6');
+          followingTheText.setAttribute('rotation', '0 -32 0');
+          document.querySelector('#chapter').appendChild(followingTheText);
+          /*
           const intervalSizeOptions = document.createElement('a-entity')
           intervalSizeOptions.setAttribute('id', 'interval-size-options');
           intervalSizeOptions.setAttribute('interval-size', '');
@@ -85,6 +94,7 @@ AFRAME.registerComponent('text-loader', {
           document.querySelector('#chapter').appendChild(intervalSizeOptions);
 
           myEmitter.emit('show-interval-size-options');
+          */
           //document.querySelector('#chapter').emit('show-interval-size-options');
         } else if (this.data.textId < this.texts.length-1) {
             this.data.textId += 1;
