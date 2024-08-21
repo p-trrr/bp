@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VR App</title>
+    <meta charset="UTF-8">
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="http://unpkg.com/tone"></script>
+<script defer src="bundle.js"></script></head>
+    <body>
+        <a-scene cursor="rayOrigin: mouse">
+            <a-entity id="cam"
+                camera                 
+                raycaster="objects: .raycastable"
+                position="0 2 0"               
+                look-controls>
+            </a-entity>
+
+            <a-entity laser-controls="hand: right" ></a-entity>
+            <a-entity id="environment" environment="preset: contact" lightPosition="0 4 2"></a-entity>
+            <a-entity id="chapter" load-chapter class="raycastable"></a-entity>
+
+            <a-plane id="menu-button" class="raycastable" menu position="-0 .5 -1.8" rotation="-40 0 0" color="white" width="2" height="1" scale=".3 .3 1"
+                     animation__mousedown="property: components.material.material.color; type: color; to: yellow; startEvents: mousedown; dur: 050"
+                     animation__mouseup="property: components.material.material.color; type: color; to: white; startEvents: mouseup; dur: 050"
+                     >
+                <a-text value="Menu" class="raycastable" align="center" color="black" position="0 0 0.01"></a-text>
+            </a-plane>
+        </a-scene>
+    </body>
+</html>
